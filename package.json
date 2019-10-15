@@ -1,0 +1,37 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "## Background and Overview The purpose of this project is to create a visual representation of the most popular hashtag(s) that are currently being used. Users will be able to see them in circles whose size depends on how many people are tweeting that hashtag.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jore0/clickBait.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jore0/clickBait/issues"
+  },
+  "homepage": "https://github.com/Jore0/clickBait#readme",
+  "dependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "autoprefixer": "^9.6.5",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "fibers": "^4.0.1",
+    "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.12.0",
+    "postcss-loader": "^3.0.0",
+    "sass": "^1.23.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2",
+    "webpack-merge": "^4.2.2"
+  }
+}
