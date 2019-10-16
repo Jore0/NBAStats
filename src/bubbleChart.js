@@ -14,7 +14,7 @@ let bubble = d3.layout.pack()
     .padding(1.5);
 
 // Define svg object
-let svg = d3.select("body").append("svg")
+let svg = d3.select("#bubble").append("svg")
     .attr("width", diameter)
     .attr("height", diameter)
     .attr("class", "bubble");
