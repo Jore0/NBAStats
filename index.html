@@ -8,20 +8,28 @@
 </head>
 
 <body>
-    <label>
-        PLAYER NAME
-        <input type="text" id="request">
-    </label>
-    <button id="btn">Click Here to add more info</button>
+    <form >
+        <label>
+            PLAYER NAME
+            <input type="text" id="playerName">
+        </label>
+        <label>
+            Select A Year
+            <select id="year">
+                <option value="2018" selected="selected">2018</option>
+                <option value="2017">2017</option>
+                <option value="2015">2015</option>
+                <option value="2014">2014</option>
+            </select>
+        </label>
+        <button id="btn">Click Here to add more info</button>
+    </form>
+
     <br>
 
     <div id="root">
-  
+
     </div>
-
-    <!-- <div id="bubble">
-
-    </div> -->
 
     <script src="./dist/main.scss"></script>
     <script src="./dist/main.js"></script>
