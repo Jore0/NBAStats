@@ -14,12 +14,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
         let request = document.getElementById("request").value
         let response = document.createElement("p")
 
-        let url = UrlHelper(request)
+        let url = findPlayerUrlHelper(request)
         grabNBAPlayer(url)
-            .then((data) => data)
-            response.innerHTML = data.id
+            .then( data => data.data[0].id)
+            .then( playerId => getStatsUrlHelper(playerId))
+            .then(url => grabNBAPlayer(url))
+            // .then(playerStats => response.innerHTML = playerStats)
+            .then(data => console.log(data.data[0]))
     })
-   
 
 })
 

@@ -5,10 +5,10 @@ export const  findPlayerUrlHelper = (name) => {
     return nbaURL
 }
 
-export const getStatsUrlHelper = (year, playerId) =>  {
+export const getStatsUrlHelper = ( playerId) =>  {
     let nbaURL = "https://www.balldontlie.io/api/v1/season_averages"
 
-    nba += `?season=${year}&player_ids[]=${playerId}`
+    nbaURL += `?season=2018&player_ids[]=${playerId}`
     return nbaURL
 
 }
