@@ -1,34 +1,52 @@
 import "./styles/index.scss";
 import "./styles/bubble.scss";
-import { grabNBAPlayer} from "./scripts/nba_util";
-import { findPlayerUrlHelper, getStatsUrlHelper} from "./scripts/urlHelper";
-import { bubbleChart } from "./scripts/bubbleChart"
-import { statConverter } from "./scripts/convertPlayerStatsBaser100"
-document.addEventListener("DOMContentLoaded", ()=>{
+import { grabNBAPlayer } from "./scripts/nba_util";
+import { findPlayerUrlHelper, getStatsUrlHelper } from "./scripts/urlHelper";
+import { bubbleChart } from "./scripts/bubbleChart";
+import { statConverter } from "./scripts/convertPlayerStatsBaser100";
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document.getElementById("root");
+  let chart = document.createElement("div");
+  chart.className = "bubble-graph";
+  let players = document.createElement("ul");
+  let year = document.getElementById("year").value;
+  let listBox = document.getElementById("listbox");
 
-    const root = document.getElementById("root");
-    let chart = document.createElement("div");
-    chart.className = "bubble-graph";
+  document.getElementById("playerName").addEventListener("input", () => {
     // debugger
-    document.getElementById("btn").addEventListener("click", (e)=> {
-        e.preventDefault()
-        let playerName = document.getElementById("playerName").value;
-        let year = document.getElementById("year").value;
-        let response = document.createElement("p");
 
-        let url = findPlayerUrlHelper(playerName)
-        grabNBAPlayer(url)
-        .then( data => {
-            console.log(data.data)
-            return data.data[0].id
-        })
-        .then( playerId => getStatsUrlHelper(year, playerId))
-        .then(url => grabNBAPlayer(url))
-        .then(data => ( { "children": statConverter(data.data[0]) } ) )
-        .then(dataset => bubbleChart(dataset))
-    })
-    root.appendChild(chart)
+    let playerName = document.getElementById("playerName").value;
 
-})
+    if (playerName.length >= 3) {
+      // debugger
+      let url = findPlayerUrlHelper(playerName);
+      grabNBAPlayer(url).then(data => {
+        // data
+        listBox.appendChild(players);
+        let results = data.data;
+        for (let i = 0; i < results.length; i++) {
+          let player = document.createElement("li");
+          player.addEventListener("click", e => {
+            // debugger;
+            let url = findPlayerUrlHelper(e.target.innerText.split(" ")[0]);
+            grabNBAPlayer(url)
+              .then(data => data.data[0].id)
+              .then(playerId => getStatsUrlHelper(year, playerId))
+              .then(url => grabNBAPlayer(url))
+              .then(data => ({ children: statConverter(data.data[0]) }))
+              .then(dataset => bubbleChart(dataset));
+          });
+          player.innerHTML =
+            results[i].first_name +
+            " " +
+            results[i].last_name +
+            " - " +
+            results[i].team.abbreviation;
+          players.appendChild(player);
+        }
+      });
+    }
+  });
 
-
+  root.appendChild(chart);
+});

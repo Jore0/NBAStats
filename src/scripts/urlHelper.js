@@ -13,6 +13,7 @@ export const getStatsUrlHelper = (year, playerId) =>  {
 
 }
 function titleize(fullName){
+    // debugger
     let titleName = []
     fullName.split(" ").forEach((name) => {
         let capName = name[0].toUpperCase() + name.slice(1).toLowerCase()
