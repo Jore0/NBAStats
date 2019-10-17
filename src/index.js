@@ -2,12 +2,13 @@ import "./styles/index.scss";
 import "./styles/bubble.scss";
 import { grabNBAPlayer} from "./scripts/nba_util";
 import { findPlayerUrlHelper, getStatsUrlHelper} from "./scripts/urlHelper";
-import {barGraph} from "./scripts/lebronBar"
+import { bubbleChart } from "./scripts/bubbleChart"
+import { statConverter } from "./scripts/convertPlayerStatsBaser100"
 document.addEventListener("DOMContentLoaded", ()=>{
 
     const root = document.getElementById("root");
     let chart = document.createElement("div");
-    chart.className = "bar-graph";
+    chart.className = "bubble-graph";
     // debugger
     document.getElementById("btn").addEventListener("click", (e)=> {
         e.preventDefault()
@@ -17,14 +18,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         let url = findPlayerUrlHelper(playerName)
         grabNBAPlayer(url)
-        .then( data => data.data[0].id)
-        .then( playerId => getStatsUrlHelper(playerId))
-        .then(url => grabNBAPlayer(year, url))
-        .then(data => response.innerHTML = data.data[0].min)
-        root.appendChild(response)
+        .then( data => {
+            console.log(data.data)
+            return data.data[0].id
         })
+        .then( playerId => getStatsUrlHelper(year, playerId))
+        .then(url => grabNBAPlayer(url))
+        .then(data => ( { "children": statConverter(data.data[0]) } ) )
+        .then(dataset => bubbleChart(dataset))
+    })
     root.appendChild(chart)
-    barGraph()
+
 })
 
 
