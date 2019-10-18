@@ -1,8 +1,29 @@
 body {
-  font-family: "Open Sans", sans-serif;
   font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(14, 13, 13);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
-
+h1 {
+  text-align: center;
+  font-size: 40px;
+  border: 3px solid rgb(104, 104, 104);
+  border-radius: 5px;
+  padding: 10px;
+}
+.search {
+  display: flex;
+}
+.red {
+  color: rgb(255, 0, 0);
+}
+.blue {
+  color: rgb(0, 0, 255);
+}
 div.tooltip {
   color: white;
   position: absolute;
@@ -17,11 +38,74 @@ div.tooltip {
   visibility: hidden;
   pointer-events: none;
 }
-
+.content {
+  text-align: center;
+  border: 3px solid rgb(104, 104, 104);
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  min-height: 500px;
+}
 circle {
   cursor: pointer;
 }
+form {
+  display: flex;
+  justify-content: space-evenly;
 
+  align-items: flex-start;
+
+  font-size: 16px;
+}
+ul {
+  padding: 0px;
+}
 li {
   cursor: pointer;
+  list-style: none;
+  margin-top: 10px;
+  padding: 0px;
+}
+li:hover {
+  background-color: rgb(104, 104, 104);
+}
+input#playerName {
+  background: rgba(255, 255, 255, 0.4);
+  border: 3px solid rgb(104, 104, 104);
+  padding: 5px 35px 5px 5px;
+  border-radius: 5px;
+  width: 400px;
+  height: 34px;
+  box-sizing: border-box;
+}
+
+input::-webkit-input-placeholder {
+  color: #ffffff;
+  font-size: 16px;
+}
+.custom-selector {
+  width: 200px;
+}
+.select-selected {
+  background-color: DodgerBlue;
+}
+
+select {
+  width: 150px;
+  padding: 5px 35px 5px 5px;
+  font-size: 16px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.4);
+  border: 3px solid rgb(104, 104, 104);
+  height: 34px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+#listbox {
+  width: 200px;
+  height: 200px;
+  border: 3px solid rgb(104, 104, 104);
+  padding: 5px;
+  overflow-y: scroll;
+  box-sizing: border-box;
 }

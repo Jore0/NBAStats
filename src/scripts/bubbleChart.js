@@ -1,16 +1,19 @@
 import * as d3 from "d3";
 
-let diameter = 300;
+let diameter = 500;
 export const bubbleChart = dataset => {
-  let color = d3.scaleOrdinal(d3.schemeCategory10);
+  // debugger;
 
+  let color = d3.hsl;
   let bubble = d3
     .pack(dataset)
     .size([diameter, diameter])
     .padding(1.5);
 
+  // debugger;
   let svg = d3
-    .select(".bubble-graph")
+    .select("#bubble-graph")
+    .html("")
     .append("svg")
     .attr("width", diameter)
     .attr("height", diameter)
@@ -29,21 +32,31 @@ export const bubbleChart = dataset => {
     })
     .append("g")
     .attr("class", "node")
+    .attr("class", function({ data }, i) {
+      // debugger;
+      return `${data.id}`;
+    })
     .attr("transform", function(d) {
+      debugger;
       return "translate(" + d.x + "," + d.y + ")";
     });
 
-  node.append("title").text(function(d) {
-    return d.category + ": " + d.size;
-  });
+  //   node.append("title").text(function(d) {
+  //     return d.category + ": " + d.size;
+  //   });
 
   node
     .append("circle")
     .attr("r", function(d) {
       return d.r;
     })
-    .style("fill", function(d) {
-      return color(d.category);
+    .style("fill", function({ data }, i) {
+      debugger;
+      return color(data.id % 360, 100, 100, 0.2);
+    })
+    .style("stroke", function({ data }, i) {
+      debugger;
+      return color(data.id % 360, 100, 100);
     });
 
   node
@@ -53,7 +66,8 @@ export const bubbleChart = dataset => {
     .text(function(d) {
       // return `${d.data.category.substring(0, d.r / 3)} \n ${Math.round(d.data.size * 100) / 100}`;
       return `${d.data.category.substring(0, d.r / 3)} \n ${d.data.value}`;
-    });
-  debugger;
+    })
+    .style("fill", color(0, 0, 100));
+
   d3.select(self.frameElement).style("height", diameter + "px");
 };
