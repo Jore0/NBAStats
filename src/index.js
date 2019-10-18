@@ -4,8 +4,7 @@ import { grabNBAPlayer } from "./scripts/nba_util";
 import { findPlayerUrlHelper, getStatsUrlHelper } from "./scripts/urlHelper";
 import { bubbleChart } from "./scripts/bubbleChart";
 import { statConverter } from "./scripts/convertPlayerStatsBaser100";
-import { bubbleChart3 } from "./scripts/bubbleChart3";
-
+import { filterSearch } from "./scripts/filterSearch";
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById("root");
   let chart = document.createElement("div");
@@ -29,7 +28,9 @@ function doneTyping() {
   let listBox = document.getElementById("listbox");
   let playerName = document.getElementById("playerName").value;
   let url = findPlayerUrlHelper(playerName);
+
   grabNBAPlayer(url).then(data => {
+    filterSearch(playerName, data, year);
     listBox.appendChild(players);
     let results = data.data;
     for (let i = 0; i < results.length; i++) {
@@ -39,10 +40,12 @@ function doneTyping() {
         playerHeading.innerText = e.target.innerText.split(" -")[0];
         const root = document.getElementById("root");
         root.appendChild(playerHeading);
-        debugger;
+
         let url = findPlayerUrlHelper(e.target.innerText.split(" ")[0]);
         grabNBAPlayer(url)
-          .then(data => data.data[0].id)
+          .then(data => {
+            return data.data[0].id;
+          })
           .then(playerId => getStatsUrlHelper(year, playerId))
           .then(url => grabNBAPlayer(url))
           .then(data => ({ children: statConverter(data.data[0]) }))

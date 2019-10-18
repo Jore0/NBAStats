@@ -37,7 +37,7 @@ export const bubbleChart = dataset => {
       return `${data.id}`;
     })
     .attr("transform", function(d) {
-      debugger;
+      // debugger;
       return "translate(" + d.x + "," + d.y + ")";
     });
 
@@ -51,11 +51,11 @@ export const bubbleChart = dataset => {
       return d.r;
     })
     .style("fill", function({ data }, i) {
-      debugger;
+      // debugger;
       return color(data.id % 360, 100, 100, 0.2);
     })
     .style("stroke", function({ data }, i) {
-      debugger;
+      // debugger;
       return color(data.id % 360, 100, 100);
     });
 
