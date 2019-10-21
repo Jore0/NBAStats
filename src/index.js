@@ -33,6 +33,7 @@ function doneTyping() {
     filterSearch(playerName, data, year);
     listBox.appendChild(players);
     let results = data.data;
+
     for (let i = 0; i < results.length; i++) {
       let player = document.createElement("li");
       player.addEventListener("click", e => {
@@ -53,6 +54,7 @@ function doneTyping() {
           .then(dataset => bubbleChart(dataset));
         players.parentNode.removeChild(players);
       });
+
       player.innerHTML =
         results[i].first_name +
         " " +
