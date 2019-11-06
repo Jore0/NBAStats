@@ -14,7 +14,7 @@ export const bubbleChart = dataset => {
   // debugger;
   let svg = d3
     .select("#bubble-graph")
-    .html("")
+    // .html("")
     .append("svg")
     .attr("width", diameter)
     .attr("height", diameter)
@@ -28,9 +28,9 @@ export const bubbleChart = dataset => {
     .selectAll(".node")
     .data(bubble(nodes).descendants())
     .enter()
-    .filter(function(d) {
-      return !d.children;
-    })
+    // .filter(function(d) {
+    //   return !d.children;
+    // })
     .append("g")
     .attr("class", "node")
     .attr("class", function({ data }, i) {
@@ -45,6 +45,7 @@ export const bubbleChart = dataset => {
   node
     .append("circle")
     .attr("r", function(d) {
+      debugger;
       return d.r;
     })
     .style("fill", function({ data }, i) {
@@ -58,9 +59,13 @@ export const bubbleChart = dataset => {
 
   node
     .append("text")
+    .filter(function(d) {
+      return !d.children;
+    })
     .attr("dy", ".3em")
     .style("text-anchor", "middle")
     .text(function(d) {
+      debugger;
       // return `${d.data.category.substring(0, d.r / 3)} \n ${Math.round(d.data.size * 100) / 100}`;
       return `${d.data.category.substring(0, d.r / 3)} \n ${d.data.value}`;
     })

@@ -51,9 +51,8 @@ function doneTyping() {
           .then(playerId => getStatsUrlHelper(year, playerId))
           .then(url => grabNBAPlayer(url))
           .then(data => ({ children: statConverter(data.data[0]) }))
-          //   .then(data => statConverter(data.data[0]))
           .then(dataset => bubblePack(dataset));
-        // bubblePack();
+        // .then(dataset => bubbleChart(dataset));
         players.parentNode.removeChild(players);
       });
 

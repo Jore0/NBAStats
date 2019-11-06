@@ -20,7 +20,9 @@ export const bubblePack = data => {
     .size([width, height])
     .padding(10);
 
-  let nodes = d3.hierarchy(data);
+  let nodes = d3.hierarchy(data).sum(function(d) {
+    return d.size;
+  });
 
   let node = g
     .selectAll(".node")
@@ -28,11 +30,16 @@ export const bubblePack = data => {
     .enter()
     .append("g")
     .attr("class", "node")
-    .attr("transform", d => "translate(" + d.x + "," + d.y + ")");
+    .attr("transform", d => {
+      return "translate(" + d.x + "," + d.y + ")";
+    });
 
   node
     .append("circle")
-    .attr("r", d => d.r)
+    .attr("r", d => {
+      debugger;
+      return d.r;
+    })
     .attr("fill", d => color(d.data.color, 100, 100, 0.25))
     // .attr("opacity", 0.25)
     .attr("stroke", d => color(d.data.color, 100, 50))
@@ -40,25 +47,14 @@ export const bubblePack = data => {
 
   node
     .append("text")
+    .filter(function(d) {
+      return !d.children;
+    })
     .attr("dy", ".3em")
-    .style("text-anchor", "left")
-    .text(d => `${d.data.category.substring(0, d.r / 3)} \n ${d.data.value}`)
+    .style("text-anchor", "middle")
+    .text(d => {
+      // debugger;
+      return `${d.data.category.substring(0, d.r / 3)} `;
+    })
     .style("fill", "#FFFFFF");
 };
-
-// const data = {
-//   name: "max",
-//   value: 100,
-//   children: [
-//     {
-//       name: "sylvia",
-//       value: 25,
-//       children: [{ name: "Jose", value: "25" }, { name: "mar", value: "25" }]
-//     },
-//     {
-//       name: "idk",
-//       value: 50,
-//       children: [{ name: "Jose", value: 10 }, { name: "mar", value: 60 }]
-//     }
-//   ]
-// };
