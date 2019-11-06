@@ -36,7 +36,6 @@
 
     <div class="content">
       <form>
-        <input type="text" id="playerName" placeholder="Search for a player" />
         <div class="custom-select">
           <select id="year">
             <option value="2018" selected="selected" disabled
@@ -47,12 +46,19 @@
             <option value="2015">2015</option>
           </select>
         </div>
-        <div id="listbox"></div>
+        <div id="listbox">
+          <input
+            type="text"
+            id="playerName"
+            placeholder="Search for a player"
+          />
+        </div>
       </form>
 
       <div id="root"></div>
     </div>
 
     <script src="./dist/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
   </body>
 </html>

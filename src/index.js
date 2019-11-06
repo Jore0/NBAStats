@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById("root");
   let chart = document.createElement("div");
   chart.id = "bubble-graph";
-
+  // drawAnimation();
   let typingTimer;
   let doneTypingInterval = 3000;
   document.getElementById("playerName").addEventListener("keyup", () => {
@@ -28,8 +28,8 @@ function doneTyping() {
   let year = document.getElementById("year").value;
   let listBox = document.getElementById("listbox");
   let playerName = document.getElementById("playerName").value;
-  let url = findPlayerUrlHelper(playerName);
 
+  let url = findPlayerUrlHelper(playerName);
   grabNBAPlayer(url).then(data => {
     filterSearch(playerName, data, year);
     listBox.appendChild(players);
