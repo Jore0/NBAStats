@@ -3,6 +3,7 @@ import * as d3 from "d3";
 let diameter = 500;
 export const bubbleChart = dataset => {
   // debugger;
+  // console.log(dataset);
 
   let color = d3.hsl;
   let bubble = d3
@@ -40,10 +41,6 @@ export const bubbleChart = dataset => {
       // debugger;
       return "translate(" + d.x + "," + d.y + ")";
     });
-
-  //   node.append("title").text(function(d) {
-  //     return d.category + ": " + d.size;
-  //   });
 
   node
     .append("circle")

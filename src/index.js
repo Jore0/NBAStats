@@ -5,6 +5,7 @@ import { findPlayerUrlHelper, getStatsUrlHelper } from "./scripts/urlHelper";
 import { bubbleChart } from "./scripts/bubbleChart";
 import { statConverter } from "./scripts/convertPlayerStatsBaser100";
 import { filterSearch } from "./scripts/filterSearch";
+import { bubblePack } from "./scripts/BubblePack";
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.getElementById("root");
   let chart = document.createElement("div");
@@ -51,7 +52,8 @@ function doneTyping() {
           .then(url => grabNBAPlayer(url))
           .then(data => ({ children: statConverter(data.data[0]) }))
           //   .then(data => statConverter(data.data[0]))
-          .then(dataset => bubbleChart(dataset));
+          .then(dataset => bubblePack(dataset));
+        // bubblePack();
         players.parentNode.removeChild(players);
       });
 

@@ -27,19 +27,18 @@ export const filterSearch = (playerName, data, year) => {
   // console.log(playerids);
   playerids.forEach(id => {
     let url = getStatsUrlHelper(year, id);
-    grabNBAPlayer(url)
-      .then(data => {
+    grabNBAPlayer(url).then(data => {
+      // debugger;
+      if (data.data.length >= 1) {
         // debugger;
-        if (data.data.length >= 1) {
-          debugger;
-          // console.log(data.data[0].player_id);
-          filteredResults.push(data.data[0]);
-        }
-      })
-      .then(() => {
-        debugger;
-        console.log(data.data);
-        console.log(filteredResults);
-      });
+        // console.log(data.data[0].player_id);
+        filteredResults.push(data.data[0]);
+      }
+    });
+    // .then(() => {
+    //   // debugger;
+    //   console.log(data.data);
+    //   console.log(filteredResults);
+    // });
   });
 };

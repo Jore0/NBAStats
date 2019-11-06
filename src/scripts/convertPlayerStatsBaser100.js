@@ -1,14 +1,13 @@
 export const statConverter = data => {
-  //   debugger;
   const formatedData = [];
-  // debugger
+  const color = Math.floor(Math.random() * 360);
+
   for (let stat in data) {
     let playerStats = {};
-    // category
+    playerStats["color"] = color;
     playerStats["id"] = data.player_id;
-    // debugger;
+
     if (stat === "pts") {
-      //size base 10
       // debugger
       playerStats["category"] = "Points";
       playerStats["size"] = (data[stat] / 36.1) * 10;
