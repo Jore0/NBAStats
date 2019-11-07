@@ -21,6 +21,7 @@ h1 {
   text-align: center;
   font-size: 40px;
   border-radius: 5px;
+  color: #616161;
 }
 .search {
   display: flex;
@@ -29,7 +30,16 @@ h1 {
   color: rgb(255, 0, 0);
 }
 .blue {
-  color: rgb(0, 0, 255);
+  color: rgb(41, 121, 255);
+}
+.green {
+  color: rgb(0, 230, 118);
+}
+.purple {
+  color: rgb(213, 0, 249);
+}
+.yellow {
+  color: rgb(255, 145, 0);
 }
 div.tooltip {
   color: white;
@@ -49,7 +59,7 @@ div.tooltip {
   text-align: center;
 
   border-radius: 5px;
-  padding: 10px;
+  padding: 20px;
   width: 100%;
   min-height: 500px;
 }
@@ -80,13 +90,15 @@ li:hover {
   background-color: rgb(124, 124, 124);
 }
 input#playerName {
-  background: rgba(255, 255, 255, 0.4);
-  border: 3px solid rgb(104, 104, 104);
+  background-color: transparent;
+  border: 1px solid rgb(104, 104, 104);
   padding: 5px 35px 5px 5px;
   border-radius: 5px;
   width: 400px;
-  height: 34px;
+  height: 50px;
   box-sizing: border-box;
+  color: white;
+  font-size: 16px;
 }
 
 input::-webkit-input-placeholder {
@@ -105,17 +117,101 @@ select {
   padding: 5px 35px 5px 5px;
   font-size: 16px;
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.4);
-  border: 3px solid rgb(104, 104, 104);
-  height: 34px;
+  background-color: transparent;
+  border: 1px solid rgb(104, 104, 104);
+  height: 50px;
   -webkit-appearance: none;
   appearance: none;
 }
 #listbox {
-  background-color: rgb(104, 104, 104);
+  background-color: transparent;
   height: fit-content(200px);
   overflow-y: scroll;
   box-sizing: border-box;
   z-index: 1;
   border-radius: 5px;
+}
+
+input:focus {
+  background-color: transparent;
+  color: #ffff;
+  font-size: 16px;
+}
+
+div#root {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+}
+div#playerInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  font-size: 30px;
+  margin-bottom: 0px;
+  text-align: left;
+}
+
+h6 {
+  font-size: 20px;
+  margin: 0px;
+  padding: 5px;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Northward tooltips */
+.d3-tip.n:after {
+  content: "\25BC";
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+  text-align: center;
+}
+
+/* Eastward tooltips */
+.d3-tip.e:after {
+  content: "\25C0";
+  margin: -4px 0 0 0;
+  top: 50%;
+  left: -8px;
+}
+
+/* Southward tooltips */
+.d3-tip.s:after {
+  content: "\25B2";
+  margin: 0 0 1px 0;
+  top: -8px;
+  left: 0;
+  text-align: center;
+}
+
+/* Westward tooltips */
+.d3-tip.w:after {
+  content: "\25B6";
+  margin: -4px 0 0 -1px;
+  top: 50%;
+  left: 100%;
 }

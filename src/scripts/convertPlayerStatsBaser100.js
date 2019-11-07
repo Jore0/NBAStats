@@ -1,6 +1,7 @@
 export const statConverter = data => {
   const formatedData = [];
-  const color = Math.floor(Math.random() * 360);
+  const colors = ["red", "blue", "green", "yellow", "purple"];
+  const color = colors[Math.floor(Math.random() * colors.length)];
 
   for (let stat in data) {
     let playerStats = {};
