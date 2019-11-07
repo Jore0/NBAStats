@@ -215,3 +215,23 @@ h6 {
   top: 50%;
   left: 100%;
 }
+
+.icons {
+  display: flex;
+}
+
+.social-icons {
+  font-size: 5em;
+  background-color: transparent;
+}
+.social-icons:hover {
+  background-color: transparent;
+}
+.fas,
+.fab {
+  color: #616161;
+}
+.fas:hover,
+.fab:hover {
+  color: rgba(255, 0, 0, 0.3);
+}
