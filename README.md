@@ -11,4 +11,4 @@ The purpose of this project is to create a visual representation of the players 
 - NBA API
 - - Will pull NBA data
 
-![NBAStats](/nbastats.png)
+![NBAStats](nbastats.png)
