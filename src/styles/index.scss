@@ -235,3 +235,11 @@ h6 {
 .fab:hover {
   color: rgba(255, 0, 0, 0.3);
 }
+
+#results {
+  padding: 0px;
+  margin: 0px;
+  position: absolute;
+  width: 400px;
+  background: black;
+}

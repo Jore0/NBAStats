@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function doneTyping() {
   let players = document.createElement("ul");
-  // let year = document.getElementById("year").value;
+  players.id = "results";
   let listBox = document.getElementById("listbox");
   let playerName = document.getElementById("playerName").value;
   let url = findPlayerUrlHelper(playerName);
