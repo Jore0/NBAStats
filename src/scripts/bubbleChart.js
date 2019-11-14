@@ -14,7 +14,7 @@ export const bubbleChart = dataset => {
   // debugger;
   let svg = d3
     .select("#bubble-graph")
-    // .html("")
+    .html("")
     .append("svg")
     .attr("width", diameter)
     .attr("height", diameter)
@@ -28,17 +28,13 @@ export const bubbleChart = dataset => {
     .selectAll(".node")
     .data(bubble(nodes).descendants())
     .enter()
-    // .filter(function(d) {
-    //   return !d.children;
-    // })
+
     .append("g")
     .attr("class", "node")
     .attr("class", function({ data }, i) {
-      // debugger;
       return `${data.id}`;
     })
     .attr("transform", function(d) {
-      // debugger;
       return "translate(" + d.x + "," + d.y + ")";
     });
 

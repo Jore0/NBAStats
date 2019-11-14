@@ -33,7 +33,7 @@ function doneTyping() {
   let playerName = document.getElementById("playerName").value;
   let url = findPlayerUrlHelper(playerName);
   grabNBAPlayer(url).then(data => {
-    // filterSearch(playerName, data, year);
+    filterSearch(playerName, data, 2018);
     listBox.appendChild(players);
     let results = data.data;
     for (let i = 0; i < results.length; i++) {
