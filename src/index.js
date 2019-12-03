@@ -4,7 +4,7 @@ import { grabNBAPlayer } from "./scripts/nba_util";
 import { findPlayerUrlHelper, getStatsUrlHelper } from "./scripts/urlHelper";
 import { bubbleChart } from "./scripts/bubbleChart";
 import { statConverter } from "./scripts/convertPlayerStatsBaser100";
-import { filterSearch } from "./scripts/filterSearch";
+import filterSearch from "./scripts/filterSearch";
 import { bubblePack } from "./scripts/BubblePack";
 
 import { playerHeading2 } from "./scripts/playerHeading";
@@ -33,9 +33,12 @@ function doneTyping() {
   let playerName = document.getElementById("playerName").value;
   let url = findPlayerUrlHelper(playerName);
   grabNBAPlayer(url).then(data => {
-    filterSearch(playerName, data, 2018);
+    let results;
+
+    results = filterSearch(playerName, data, 2018);
+    console.log(results);
     listBox.appendChild(players);
-    let results = data.data;
+    results = data.data;
     for (let i = 0; i < results.length; i++) {
       let player = document.createElement("li");
       player.addEventListener("click", e => {

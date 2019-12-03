@@ -1,11 +1,12 @@
 import { grabNBAPlayer } from "./nba_util";
 import { findPlayerUrlHelper, getStatsUrlHelper } from "./urlHelper";
 
-export const filterSearch = (playerName, data, year) => {
+async function filterSearch(playerName, data, year) {
   // debugger;
   let total_pages = data.meta.total_pages;
   let playerids = [];
   let filteredResults = [];
+  let players = [];
 
   if (total_pages > 1) {
     playerids = playerids.concat(Object.values(data.data).map(item => item.id));
@@ -22,32 +23,53 @@ export const filterSearch = (playerName, data, year) => {
   } else {
     playerids = playerids.concat(Object.values(data.data).map(item => item.id));
   }
-  // debugger
-  // console.log(playerids);
-  playerids.forEach(id => {
-    let url = getStatsUrlHelper(year, id);
-    grabNBAPlayer(url)
-      .then(data => {
-        // debugger;
-        if (data.data.length >= 1) {
-          // debugger;
-          // console.log(data.data[0].player_id);
-          filteredResults.push(data.data[0]);
-        }
-      })
 
-      .then(() => {
-        // debugger;
-        // console.log(data.data);
-        // console.log(filteredResults);
-        data.data.filter(player => {
-          filteredResults.forEach(filterPlayer => {
-            if (filterPlayer.player_id === player.id) {
-              return player;
+  //   const fetchedData = await Promise.all(playerIds.map(id => grabNBAPlayer(getStatsUrlHelper(year, id))))
+  //   //manipulate your data here
+  //   console.log(fetchedData)
+  // }
+
+  const fetchedData = await Promise.all(
+    playerids.map(id =>
+      grabNBAPlayer(
+        getStatsUrlHelper(year, id)
+          .then(data => {
+            if (data.data.length >= 1) {
+              filteredResults.push(data.data[0]);
             }
-          });
-          console.log(data.data);
-        });
-      });
-  });
-};
+          })
+          .then(() => {
+            data.data.forEach(player => {
+              filteredResults.forEach(filterPlayer => {
+                if (filterPlayer.player_id === player.id) {
+                  players.push(player);
+                }
+              });
+            });
+          })
+      )
+    )
+  );
+  // playerids.forEach(id => {
+  //   let url = getStatsUrlHelper(year, id);
+  //   grabNBAPlayer(url)
+  //     .then(data => {
+  //       if (data.data.length >= 1) {
+  //         filteredResults.push(data.data[0]);
+  //       }
+  //     })
+  //     .then(() => {
+  //       data.data.forEach(player => {
+  //         filteredResults.forEach(filterPlayer => {
+  //           if (filterPlayer.player_id === player.id) {
+  //             players.push(player);
+  //           }
+  //         });
+  //       });
+  //     });
+  // });
+
+  return players;
+}
+
+export default filterSearch;
