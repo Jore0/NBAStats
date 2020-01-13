@@ -7,5 +7,19 @@
 }
 
 body {
-  background-color: #111;
+  font-family: Open Sans;
+  font-size: 16px;
+  height: 100vh;
+  font-weight: 400;
+  position: relative;
+}
+
+header {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+    url("../images/nbalogo.jpg");
+  height: 40vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  position: relative;
 }

@@ -2,11 +2,14 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" href="./src/styles/index2.css" />
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>NBA Stats</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -25,26 +28,28 @@
       href="./favicon_io (1)/favicon-16x16.png"
     />
     <link rel="manifest" href="./favicon_io (1)/site.webmanifest" />
+        <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
     <script
       src="https://kit.fontawesome.com/29fb5afd4d.js"
       crossorigin="anonymous"
     ></script>
   </head>
   <body>
-    <header>
-      <select class="btn-year" required>
-        <option value="" selected disabled>Select a year</option>
-        <option value="2016">2016</option>
-        <option value="2017">2017</option>
-        <option value="2018">2018</option>
-      </select>
-      <div id="search-dropdown">
-        <input
-          type="text"
-          id="playerName"
-          placeholder="Search for a player (Example: Lebron James, James Harden)"
-        />
+    <header></header>
+    <main>
+      <div class="add">
+        <div class="add__container">
+          <select class="add__year">
+            <option value="2018">2018</option>
+          </select>
+          <input type="text" class="add_player" placeholder="Search for a player (Example: Lebron James, James Harden)" />
+        </div>
+        <button class="add__btn">
+          <i class="ion-ios-checkmark-outline"></i>
+        </button>
+      </div>        
+      
       </div>
-    </header>
+    </main>
   </body>
 </html>
