@@ -49,5 +49,6 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-regenerator": "^7.7.4"
-  }
+  },
+  "type": "module"
 }
