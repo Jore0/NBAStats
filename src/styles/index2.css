@@ -150,12 +150,14 @@ a:hover {
   position: relative;
 } */
 .items {
+  display: none;
+  padding: 0;
+
   z-index: 1;
   text-align: center;
   position: relative;
   left: 50%;
   transform: translate(-47%, -5%);
-  /* background-color: red; */
   background-color: #f7f7f7;
   font-family: inherit;
   font-size: 14px;
@@ -168,4 +170,5 @@ a:hover {
 }
 .item:hover {
   background-color: #e3e3e3;
+  cursor: pointer;
 }

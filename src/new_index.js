@@ -21,7 +21,14 @@ let playerController = (function() {
     nbaURL += `?season=${year}&player_ids[]=${playerId}`;
     return nbaURL;
   };
+  let data = {
+    allPlayers: []
+  };
   return {
+    addPlayer: id => {
+      data.allPlayers.push(parseInt(id));
+      console.log(data.allPlayers);
+    },
     APIFindPlayers: async (name, year) => {
       let url, response, data;
       url = findPlayerUrlHelper(name);
@@ -32,15 +39,25 @@ let playerController = (function() {
     }
   };
 })();
+
+/* ******************************** */
 //UI CONTROLLER
 let UIController = (function() {
   let DOMStrings = {
+    add: ".add",
+    items: ".items",
     inputYear: ".add__year",
     inputPlayer: ".add__player",
     inputBtn: ".add__btn"
   };
 
   return {
+    clearList: () => {
+      let itemsDOM;
+      itemsDOM = document.querySelector(DOMStrings.items);
+      itemsDOM.innerHTML = "";
+      itemsDOM.style.display = "none";
+    },
     getInput: () => {
       return {
         year: document.querySelector(DOMStrings.inputYear).value,
@@ -48,15 +65,29 @@ let UIController = (function() {
       };
     },
     addListItem: data => {
-      let html;
-      html =
-        '<div class="items"><div class="item" id="%id%"><div class="playerName">%player%-%team%</div></div></div>';
+      let itemsDOM;
+      data.forEach(player => {
+        let html, newHTML;
+        html = '<div class="item" id="%id%">%player% - %team%</div>';
+        newHTML = html.replace("%id%", player.id);
+        newHTML = newHTML.replace(
+          "%player%",
+          player.first_name + " " + player.last_name
+        );
+        newHTML = newHTML.replace("%team%", player.team.abbreviation);
+
+        itemsDOM = document.querySelector(DOMStrings.items);
+        itemsDOM.style.display = "block";
+        itemsDOM.insertAdjacentHTML("beforeend", newHTML);
+      });
     },
     getDOMStrings: () => {
       return DOMStrings;
     }
   };
 })();
+
+/* ******************************** */
 //GLOBAL APP CONTROLLER
 let controller = (function(plyCtlr, UICtlr) {
   let setupEventListeners = () => {
@@ -69,6 +100,7 @@ let controller = (function(plyCtlr, UICtlr) {
         searchPlayer();
       }
     });
+    document.querySelector(DOM.add).addEventListener("click", ctrlSelectPlayer);
   };
 
   let searchPlayer = async () => {
@@ -83,11 +115,17 @@ let controller = (function(plyCtlr, UICtlr) {
       );
       console.log(possiblePlayers);
       //3. Display players
+      UICtlr.addListItem(possiblePlayers);
     }
+  };
 
-    //4. Return Data
-    //5. Add chart to UI
-    //6. clear the input feilds
+  let ctrlSelectPlayer = event => {
+    let playerID;
+    if (event.target.id) {
+      playerID = event.target.id;
+      plyCtlr.addPlayer(playerID);
+      UICtlr.clearList();
+    }
   };
   return {
     init: () => {
