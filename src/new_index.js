@@ -17,21 +17,22 @@ let playerController = (function() {
   };
   let getStatsUrlHelper = (year, playerId) => {
     let nbaURL = "https://www.balldontlie.io/api/v1/season_averages";
-
     nbaURL += `?season=${year}&player_ids[]=${playerId}`;
     return nbaURL;
   };
   let data = {
-    allPlayers: []
+    allPlayers: {}
   };
   return {
-    addPlayer: id => {
-      data.allPlayers.push(parseInt(id));
+    addPlayer: (id, stats) => {
+      data.allPlayers[id] = stats;
       console.log(data.allPlayers);
     },
-    APIFindPlayers: async (name, year) => {
+    APIFindPlayers: async (type, name, year, id) => {
       let url, response, data;
-      url = findPlayerUrlHelper(name);
+      type === "search"
+        ? (url = findPlayerUrlHelper(name))
+        : (url = getStatsUrlHelper(id, year));
       response = await fetch(url, { method: "GET" });
       data = await response.json();
       data = data.data;
@@ -48,10 +49,12 @@ let UIController = (function() {
     items: ".items",
     inputYear: ".add__year",
     inputPlayer: ".add__player",
-    inputBtn: ".add__btn"
+    inputBtn: ".add__btn",
+    chart: ".myChart"
   };
 
   return {
+    createChart: data => {},
     clearList: () => {
       let itemsDOM;
       itemsDOM = document.querySelector(DOMStrings.items);
@@ -105,25 +108,30 @@ let controller = (function(plyCtlr, UICtlr) {
 
   let searchPlayer = async () => {
     let input, possiblePlayers;
+    UICtlr.clearList();
     //1. Get input field info
     input = UICtlr.getInput();
     if (input.playerName !== "") {
       //2. Fetch data from API
       possiblePlayers = await plyCtlr.APIFindPlayers(
+        "search",
         input.playerName,
         input.year
       );
-      console.log(possiblePlayers);
+      // console.log(possiblePlayers);
       //3. Display players
       UICtlr.addListItem(possiblePlayers);
     }
   };
 
-  let ctrlSelectPlayer = event => {
-    let playerID;
+  let ctrlSelectPlayer = async event => {
+    let playerID, playerStats, fullName;
     if (event.target.id) {
+      fullName = event.target.innerHTML.split(" -")[0];
       playerID = event.target.id;
-      plyCtlr.addPlayer(playerID);
+      playerStats = await plyCtlr.APIFindPlayers("stats", "", playerID, 2018);
+      playerStats[0]["name"] = fullName;
+      plyCtlr.addPlayer(playerID, playerStats[0]);
       UICtlr.clearList();
     }
   };
