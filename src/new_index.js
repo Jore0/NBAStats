@@ -22,11 +22,13 @@ let playerController = (function() {
     return nbaURL;
   };
   return {
-    APIFindPlayers: (name, year) => {
-      const proxyUrl = "";
-      return fetch(proxyUrl + url, {
-        method: "GET"
-      }).then(res => res.json());
+    APIFindPlayers: async (name, year) => {
+      let url, response, data;
+      url = findPlayerUrlHelper(name);
+      response = await fetch(url, { method: "GET" });
+      data = await response.json();
+      data = data.data;
+      return data;
     }
   };
 })();
@@ -34,7 +36,7 @@ let playerController = (function() {
 let UIController = (function() {
   let DOMStrings = {
     inputYear: ".add__year",
-    inputPlayer: ".add_player",
+    inputPlayer: ".add__player",
     inputBtn: ".add__btn"
   };
 
@@ -45,6 +47,7 @@ let UIController = (function() {
         playerName: document.querySelector(DOMStrings.inputPlayer).value
       };
     },
+    addListItem: data => {},
     getDOMStrings: () => {
       return DOMStrings;
     }
@@ -64,18 +67,23 @@ let controller = (function(plyCtlr, UICtlr) {
     });
   };
 
-  let searchPlayer = () => {
-    let input, data;
+  let searchPlayer = async () => {
+    let input, possiblePlayers;
     //1. Get input field info
     input = UICtlr.getInput();
     if (input.playerName !== "") {
       //2. Fetch data from API
-      data = plyCtlr.APIFindPlayers(input.playerName, input.year);
+      possiblePlayers = await plyCtlr.APIFindPlayers(
+        input.playerName,
+        input.year
+      );
+      console.log(possiblePlayers);
+      //3. Display players
     }
 
-    //3. Return Data
-    //4. Add chart to UI
-    //5. clear the input feilds
+    //4. Return Data
+    //5. Add chart to UI
+    //6. clear the input feilds
   };
   return {
     init: () => {

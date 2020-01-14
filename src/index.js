@@ -35,7 +35,7 @@ function doneTyping() {
   grabNBAPlayer(url).then(data => {
     let results;
 
-    results = filterSearch(playerName, data, 2018);
+    // results = filterSearch(playerName, data, 2018);
     console.log(results);
     listBox.appendChild(players);
     results = data.data;
