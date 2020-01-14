@@ -28,6 +28,16 @@ let playerController = (function() {
       data.allPlayers[id] = stats;
       console.log(data.allPlayers);
     },
+    getFormatedData: dataType => {
+      let labels, playerData, formattedData;
+      labels = Object.keys(data.allPlayers);
+      playerData = Object.values(data.allPlayers).map(playerStats => {
+        return playerStats[dataType];
+      });
+      formattedData = { labes: labels, data: playerData };
+      console.log(formattedData);
+      return formattedData;
+    },
     APIFindPlayers: async (type, name, year, id) => {
       let url, response, data;
       type === "search"
@@ -50,11 +60,17 @@ let UIController = (function() {
     inputYear: ".add__year",
     inputPlayer: ".add__player",
     inputBtn: ".add__btn",
-    chart: ".myChart"
+    chart: "myChart"
   };
 
   return {
-    createChart: data => {},
+    createChart: data => {
+      let ctx = document.getElementById(DOMStrings.chart).getContext("2d");
+      let chart = new Chart(ctx, {
+        type: "line",
+        data: data
+      });
+    },
     clearList: () => {
       let itemsDOM;
       itemsDOM = document.querySelector(DOMStrings.items);
@@ -125,13 +141,14 @@ let controller = (function(plyCtlr, UICtlr) {
   };
 
   let ctrlSelectPlayer = async event => {
-    let playerID, playerStats, fullName;
+    let playerID, playerStats, fullName, chartData;
     if (event.target.id) {
       fullName = event.target.innerHTML.split(" -")[0];
       playerID = event.target.id;
       playerStats = await plyCtlr.APIFindPlayers("stats", "", playerID, 2018);
-      playerStats[0]["name"] = fullName;
-      plyCtlr.addPlayer(playerID, playerStats[0]);
+      plyCtlr.addPlayer(fullName, playerStats[0]);
+      chartData = plyCtlr.getFormatedData("pts");
+      UICtlr.createChart(chartData);
       UICtlr.clearList();
     }
   };
