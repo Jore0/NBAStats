@@ -47,7 +47,11 @@ let UIController = (function() {
         playerName: document.querySelector(DOMStrings.inputPlayer).value
       };
     },
-    addListItem: data => {},
+    addListItem: data => {
+      let html;
+      html =
+        '<div class="items"><div class="item" id="%id%"><div class="playerName">%player%-%team%</div></div></div>';
+    },
     getDOMStrings: () => {
       return DOMStrings;
     }

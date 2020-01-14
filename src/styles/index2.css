@@ -85,11 +85,13 @@ a:hover {
   padding: 14px;
   border-bottom: 1px solid #e7e7e7;
   background-color: #f7f7f7;
+  height: 80px;
 }
 
 .add__container {
   margin: 0 auto;
   text-align: center;
+  position: relative;
 }
 
 .add__year {
@@ -141,4 +143,29 @@ a:hover {
 
 .add__btn:focus {
   outline: none;
+}
+
+/***** SEARCH RESULTS *****/
+/* .add__player {
+  position: relative;
+} */
+.items {
+  z-index: 1;
+  text-align: center;
+  position: relative;
+  left: 50%;
+  transform: translate(-47%, -5%);
+  /* background-color: red; */
+  background-color: #f7f7f7;
+  font-family: inherit;
+  font-size: 14px;
+  color: inherit;
+  width: 420px;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
+}
+.item {
+  padding: 12px 15px;
+}
+.item:hover {
+  background-color: #e3e3e3;
 }
