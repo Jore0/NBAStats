@@ -146,9 +146,7 @@ a:hover {
 }
 
 /***** SEARCH RESULTS *****/
-/* .add__player {
-  position: relative;
-} */
+
 .items {
   display: none;
   padding: 0;
@@ -171,4 +169,10 @@ a:hover {
 .item:hover {
   background-color: #e3e3e3;
   cursor: pointer;
+}
+
+/***** CHART *****/
+canvas {
+  width: 400px;
+  height: 400px;
 }

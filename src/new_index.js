@@ -15,14 +15,15 @@ let playerController = (function() {
     nbaURL += `players/?search=${caplitalizedName}&per_page=100`;
     return nbaURL;
   };
-  let getStatsUrlHelper = (year, playerId) => {
+  let getStatsUrlHelper = playerId => {
     let nbaURL = "https://www.balldontlie.io/api/v1/season_averages";
-    nbaURL += `?season=${year}&player_ids[]=${playerId}`;
+    nbaURL += `?season=2019&player_ids[]=${playerId}`;
     return nbaURL;
   };
   let data = {
     allPlayers: {}
   };
+  //www.balldontlie.io/api/v1/stats?seasons[]=2019,2018,2017,2016,2015,2014&player_ids[]=237,236
   return {
     addPlayer: (id, stats) => {
       data.allPlayers[id] = stats;
@@ -34,19 +35,26 @@ let playerController = (function() {
       playerData = Object.values(data.allPlayers).map(playerStats => {
         return playerStats[dataType];
       });
-      formattedData = { labes: labels, data: playerData };
+      formattedData = { labes: labels, datasets: playerData };
       console.log(formattedData);
       return formattedData;
     },
-    APIFindPlayers: async (type, name, year, id) => {
+    APIFindPlayers: async name => {
       let url, response, data;
-      type === "search"
-        ? (url = findPlayerUrlHelper(name))
-        : (url = getStatsUrlHelper(id, year));
+      url = findPlayerUrlHelper(name);
       response = await fetch(url, { method: "GET" });
       data = await response.json();
       data = data.data;
       return data;
+    },
+    APIGetPlayerAvg: async id => {
+      let url, response, data;
+
+      // url = getStatsUrlHelper(id);
+      // response = await fetch(url, { method: "GET" });
+      // data = await response.json();
+
+      return data.data;
     }
   };
 })();
@@ -129,12 +137,7 @@ let controller = (function(plyCtlr, UICtlr) {
     input = UICtlr.getInput();
     if (input.playerName !== "") {
       //2. Fetch data from API
-      possiblePlayers = await plyCtlr.APIFindPlayers(
-        "search",
-        input.playerName,
-        input.year
-      );
-      // console.log(possiblePlayers);
+      possiblePlayers = await plyCtlr.APIFindPlayers(input.playerName);
       //3. Display players
       UICtlr.addListItem(possiblePlayers);
     }
@@ -145,10 +148,10 @@ let controller = (function(plyCtlr, UICtlr) {
     if (event.target.id) {
       fullName = event.target.innerHTML.split(" -")[0];
       playerID = event.target.id;
-      playerStats = await plyCtlr.APIFindPlayers("stats", "", playerID, 2018);
+      playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
       plyCtlr.addPlayer(fullName, playerStats[0]);
-      chartData = plyCtlr.getFormatedData("pts");
-      UICtlr.createChart(chartData);
+      // chartData = plyCtlr.getFormatedData("pts");
+      // UICtlr.createChart(chartData);
       UICtlr.clearList();
     }
   };
