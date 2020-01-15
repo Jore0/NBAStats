@@ -173,6 +173,7 @@ a:hover {
 
 /***** CHART *****/
 canvas {
-  width: 400px;
-  height: 400px;
+  margin: 0 auto;
+  width: 800px !important;
+  height: 400px !important;
 }

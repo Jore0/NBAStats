@@ -1,5 +1,18 @@
 //PLAYER DATA CONTROLLER
 let playerController = (function() {
+  let ChartData = function(labels, stats, playerName, color) {
+    this.labels = labels;
+    this.datasets = [
+      {
+        data: stats,
+        label: playerName,
+        borderColor: color,
+        fill: false,
+        pointRadius: 10,
+        pointBackgroundColor: color
+      }
+    ];
+  };
   let titleize = fullName => {
     let titleName = [];
     fullName.split(" ").forEach(name => {
@@ -22,9 +35,8 @@ let playerController = (function() {
   };
   let data = {
     allPlayers: {},
-    years: ["2019", "2018", "2017", "2016", "2015", "2014"]
+    years: ["2014", "2015", "2016", "2017", "2018", "2019"]
   };
-  //www.balldontlie.io/api/v1/stats?seasons[]=2019,2018,2017,2016,2015,2014&player_ids[]=237,236
   return {
     addPlayer: (id, stats) => {
       data.allPlayers[id] = stats;
@@ -35,27 +47,22 @@ let playerController = (function() {
       labels = Object.keys(data.allPlayers);
       //arrays
       allPlayerData = Object.values(data.allPlayers).map(playerSeasons => {
-        debugger;
+        // debugger;
         return playerSeasons.map(season => {
-          debugger;
+          // debugger;
           return Object.values(season).map(stats => {
-            debugger;
+            // debugger;
             return stats[0][dataType];
           })[0];
         });
       });
-      console.log(allPlayerData);
-      formattedData = {
-        labels: data.years,
-        datasets: [
-          {
-            data: allPlayerData[0],
-            label: labels[0],
-            borderColor: "#3e95cd",
-            fill: false
-          }
-        ]
-      };
+
+      formattedData = new ChartData(
+        data.years,
+        allPlayerData[0],
+        labels[0],
+        "#3e95cd"
+      );
       console.log(formattedData);
       return formattedData;
     },
@@ -103,6 +110,7 @@ let UIController = (function() {
 
   return {
     createChart: data => {
+      Chart.defaults.global.defaultFontSize = 18;
       let ctx = document.getElementById(DOMStrings.chart).getContext("2d");
       let chart = new Chart(ctx, {
         type: "line",
