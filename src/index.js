@@ -55,8 +55,8 @@ let playerController = (function() {
         });
         playerStats = new PlayerDataSet(allPlayerData, player, "#3e95cd");
         datasets.push(playerStats);
-        console.log(datasets);
       });
+      console.log("hello");
       return { labels: data.years, datasets: datasets };
     },
     APIFindPlayers: async name => {
