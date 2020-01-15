@@ -2,18 +2,13 @@ require("babel-core/register");
 require("babel-polyfill");
 //PLAYER DATA CONTROLLER
 let playerController = (function() {
-  let ChartData = function(labels, stats, playerName, color) {
-    this.labels = labels;
-    this.datasets = [
-      {
-        data: stats,
-        label: playerName,
-        borderColor: color,
-        fill: false,
-        pointRadius: 10,
-        pointBackgroundColor: color
-      }
-    ];
+  let PlayerDataSet = function(stats, playerName, color) {
+    (this.data = stats),
+      (this.label = playerName),
+      (this.borderColor = color),
+      (this.fill = false),
+      (this.pointRadius = 10),
+      (thispointBackgroundColor = color);
   };
   let titleize = fullName => {
     let titleName = [];
@@ -37,7 +32,8 @@ let playerController = (function() {
   };
   let data = {
     allPlayers: {},
-    years: ["2014", "2015", "2016", "2017", "2018", "2019"]
+    years: ["2014", "2015", "2016", "2017", "2018", "2019"],
+    colors: ["#3e95cd", "#E7BB41", "#BB0A21", "#540D6E", "046D0E"]
   };
   return {
     addPlayer: (id, stats) => {
@@ -45,28 +41,23 @@ let playerController = (function() {
       console.log(data.allPlayers);
     },
     getFormatedData: dataType => {
-      let labels, allPlayerData, formattedData;
+      let labels, datasets;
+      datasets = [];
       labels = Object.keys(data.allPlayers);
       //arrays
-      allPlayerData = Object.values(data.allPlayers).map(playerSeasons => {
-        // debugger;
-        return playerSeasons.map(season => {
-          // debugger;
-          return Object.values(season).map(stats => {
-            // debugger;
-            return stats[0][dataType];
-          })[0];
+      labels.forEach(player => {
+        let playerStats;
+        allPlayerData = data.allPlayers[player].map(playerSeasons => {
+          debugger;
+          return Object.values(playerSeasons)[0].map(
+            season => season[dataType]
+          )[0];
         });
+        playerStats = new PlayerDataSet(allPlayerData, player, "#3e95cd");
+        datasets.push(playerStats);
+        console.log(datasets);
       });
-
-      formattedData = new ChartData(
-        data.years,
-        allPlayerData[0],
-        labels[0],
-        "#3e95cd"
-      );
-      console.log(formattedData);
-      return formattedData;
+      return { labels: data.years, datasets: datasets };
     },
     APIFindPlayers: async name => {
       let url, response, data;
