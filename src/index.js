@@ -1,72 +1,213 @@
-import "./styles/index.scss";
-import "./styles/bubble.scss";
-import { grabNBAPlayer } from "./scripts/nba_util";
-import { findPlayerUrlHelper, getStatsUrlHelper } from "./scripts/urlHelper";
-import { bubbleChart } from "./scripts/bubbleChart";
-import { statConverter } from "./scripts/convertPlayerStatsBaser100";
-import filterSearch from "./scripts/filterSearch";
-import { bubblePack } from "./scripts/BubblePack";
+require("babel-core/register");
+require("babel-polyfill");
+//PLAYER DATA CONTROLLER
+let playerController = (function() {
+  let ChartData = function(labels, stats, playerName, color) {
+    this.labels = labels;
+    this.datasets = [
+      {
+        data: stats,
+        label: playerName,
+        borderColor: color,
+        fill: false,
+        pointRadius: 10,
+        pointBackgroundColor: color
+      }
+    ];
+  };
+  let titleize = fullName => {
+    let titleName = [];
+    fullName.split(" ").forEach(name => {
+      let capName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+      titleName.push(capName);
+    });
+    return titleName.join("");
+  };
 
-import { playerHeading2 } from "./scripts/playerHeading";
-document.addEventListener("DOMContentLoaded", () => {
-  const root = document.getElementById("root");
-  let chart = document.createElement("div");
-  chart.id = "bubble-graph";
-
-  let typingTimer;
-  let doneTypingInterval = 3000;
-  document.getElementById("playerName").addEventListener("keyup", () => {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(doneTyping, doneTypingInterval);
-  });
-  document.getElementById("playerName").addEventListener("keydown", () => {
-    clearTimeout(typingTimer);
-  });
-
-  root.appendChild(chart);
-});
-
-function doneTyping() {
-  let players = document.createElement("ul");
-  players.id = "results";
-  let listBox = document.getElementById("listbox");
-  let playerName = document.getElementById("playerName").value;
-  let url = findPlayerUrlHelper(playerName);
-  grabNBAPlayer(url).then(data => {
-    let results;
-
-    // results = filterSearch(playerName, data, 2018);
-    console.log(results);
-    listBox.appendChild(players);
-    results = data.data;
-    for (let i = 0; i < results.length; i++) {
-      let player = document.createElement("li");
-      player.addEventListener("click", e => {
-        let url = findPlayerUrlHelper(e.target.innerText.split(" ")[0]);
-        grabNBAPlayer(url)
-          .then(data => {
-            return data.data[0].id;
-          })
-          .then(playerId => getStatsUrlHelper(2018, playerId))
-          .then(url => grabNBAPlayer(url))
-          .then(data => ({ children: statConverter(data.data[0]) }))
-          .then(dataset => {
-            playerHeading2(e, results[i], dataset.children[0].color);
-            bubblePack(
-              dataset,
-              dataset.children[0].color,
-              results[i].first_name
-            );
-          });
-        players.parentNode.removeChild(players);
+  let findPlayerUrlHelper = name => {
+    let nbaURL = "https://www.balldontlie.io/api/v1/";
+    let caplitalizedName = titleize(name);
+    nbaURL += `players/?search=${caplitalizedName}&per_page=100`;
+    return nbaURL;
+  };
+  let getStatsUrlHelper = (playerId, year) => {
+    let nbaURL = "https://www.balldontlie.io/api/v1/season_averages";
+    nbaURL += `?season=${year}&player_ids[]=${playerId}`;
+    return nbaURL;
+  };
+  let data = {
+    allPlayers: {},
+    years: ["2014", "2015", "2016", "2017", "2018", "2019"]
+  };
+  return {
+    addPlayer: (id, stats) => {
+      data.allPlayers[id] = stats;
+      console.log(data.allPlayers);
+    },
+    getFormatedData: dataType => {
+      let labels, allPlayerData, formattedData;
+      labels = Object.keys(data.allPlayers);
+      //arrays
+      allPlayerData = Object.values(data.allPlayers).map(playerSeasons => {
+        // debugger;
+        return playerSeasons.map(season => {
+          // debugger;
+          return Object.values(season).map(stats => {
+            // debugger;
+            return stats[0][dataType];
+          })[0];
+        });
       });
-      player.innerHTML =
-        results[i].first_name +
-        " " +
-        results[i].last_name +
-        " - " +
-        results[i].team.abbreviation;
-      players.appendChild(player);
+
+      formattedData = new ChartData(
+        data.years,
+        allPlayerData[0],
+        labels[0],
+        "#3e95cd"
+      );
+      console.log(formattedData);
+      return formattedData;
+    },
+    APIFindPlayers: async name => {
+      let url, response, data;
+      url = findPlayerUrlHelper(name);
+      response = await fetch(url, { method: "GET" });
+      data = await response.json();
+      data = data.data;
+      return data;
+    },
+    APIGetPlayerAvg: async (id, years) => {
+      let url, playerData;
+      years ? years : (years = data.years);
+
+      playerData = await Promise.all(
+        years.map(async year => {
+          let response, obj;
+          obj = {};
+          url = getStatsUrlHelper(id, year);
+          response = await fetch(url, { method: "GET" });
+          response = await response.json();
+          response = response.data;
+          obj[year] = response;
+          return obj;
+        })
+      );
+
+      return playerData;
     }
-  });
-}
+  };
+})();
+
+/* ******************************** */
+//UI CONTROLLER
+let UIController = (function() {
+  let DOMStrings = {
+    add: ".add",
+    items: ".items",
+    inputYear: ".add__year",
+    inputPlayer: ".add__player",
+    inputBtn: ".add__btn",
+    chart: "myChart"
+  };
+
+  return {
+    createChart: data => {
+      Chart.defaults.global.defaultFontSize = 18;
+      let ctx = document.getElementById(DOMStrings.chart).getContext("2d");
+      let chart = new Chart(ctx, {
+        type: "line",
+        data: data,
+        options: {
+          title: {
+            display: true,
+            text: "Points"
+          }
+        }
+      });
+    },
+    clearList: () => {
+      let itemsDOM;
+      itemsDOM = document.querySelector(DOMStrings.items);
+      itemsDOM.innerHTML = "";
+      itemsDOM.style.display = "none";
+    },
+    getInput: () => {
+      return {
+        year: document.querySelector(DOMStrings.inputYear).value,
+        playerName: document.querySelector(DOMStrings.inputPlayer).value
+      };
+    },
+    addListItem: data => {
+      let itemsDOM;
+      data.forEach(player => {
+        let html, newHTML;
+        html = '<div class="item" id="%id%">%player% - %team%</div>';
+        newHTML = html.replace("%id%", player.id);
+        newHTML = newHTML.replace(
+          "%player%",
+          player.first_name + " " + player.last_name
+        );
+        newHTML = newHTML.replace("%team%", player.team.abbreviation);
+
+        itemsDOM = document.querySelector(DOMStrings.items);
+        itemsDOM.style.display = "block";
+        itemsDOM.insertAdjacentHTML("beforeend", newHTML);
+      });
+    },
+    getDOMStrings: () => {
+      return DOMStrings;
+    }
+  };
+})();
+
+/* ******************************** */
+//GLOBAL APP CONTROLLER
+let controller = (function(plyCtlr, UICtlr) {
+  let setupEventListeners = () => {
+    let DOM = UICtlr.getDOMStrings();
+    document
+      .querySelector(DOM.inputBtn)
+      .addEventListener("click", searchPlayer);
+    document.addEventListener("keypress", event => {
+      if (event.keyCode === 13 || event.which === 13) {
+        searchPlayer();
+      }
+    });
+    document.querySelector(DOM.add).addEventListener("click", ctrlSelectPlayer);
+  };
+
+  let searchPlayer = async () => {
+    let input, possiblePlayers;
+    UICtlr.clearList();
+    //1. Get input field info
+    input = UICtlr.getInput();
+    if (input.playerName !== "") {
+      //2. Fetch data from API
+      possiblePlayers = await plyCtlr.APIFindPlayers(input.playerName);
+      //3. Display players
+      UICtlr.addListItem(possiblePlayers);
+    }
+  };
+
+  let ctrlSelectPlayer = async event => {
+    let playerID, playerStats, fullName, chartData;
+    if (event.target.id) {
+      fullName = event.target.innerHTML.split(" -")[0];
+      playerID = event.target.id;
+      playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
+      plyCtlr.addPlayer(fullName, playerStats);
+      chartData = plyCtlr.getFormatedData("pts");
+      UICtlr.createChart(chartData);
+      UICtlr.clearList();
+    }
+  };
+  return {
+    init: () => {
+      console.log("Application is running");
+
+      setupEventListeners();
+    }
+  };
+})(playerController, UIController);
+
+controller.init();
