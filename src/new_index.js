@@ -15,9 +15,9 @@ let playerController = (function() {
     nbaURL += `players/?search=${caplitalizedName}&per_page=100`;
     return nbaURL;
   };
-  let getStatsUrlHelper = playerId => {
+  let getStatsUrlHelper = (playerId, year) => {
     let nbaURL = "https://www.balldontlie.io/api/v1/season_averages";
-    nbaURL += `?season=2019&player_ids[]=${playerId}`;
+    nbaURL += `?season=${year}&player_ids[]=${playerId}`;
     return nbaURL;
   };
   let data = {
@@ -32,6 +32,7 @@ let playerController = (function() {
     getFormatedData: dataType => {
       let labels, playerData, formattedData;
       labels = Object.keys(data.allPlayers);
+      debugger;
       playerData = Object.values(data.allPlayers).map(playerStats => {
         return playerStats[dataType];
       });
@@ -47,14 +48,26 @@ let playerController = (function() {
       data = data.data;
       return data;
     },
-    APIGetPlayerAvg: async id => {
-      let url, response, data;
+    APIGetPlayerAvg: async (id, years) => {
+      let url, playerData;
+      years
+        ? years
+        : (years = ["2019", "2018", "2017", "2016", "2015", "2014"]);
 
-      // url = getStatsUrlHelper(id);
-      // response = await fetch(url, { method: "GET" });
-      // data = await response.json();
+      playerData = await Promise.all(
+        years.map(async year => {
+          let response, obj;
+          obj = {};
+          url = getStatsUrlHelper(id, year);
+          response = await fetch(url, { method: "GET" });
+          response = await response.json();
+          response = response.data;
+          obj[year] = response;
+          return obj;
+        })
+      );
 
-      return data.data;
+      return playerData;
     }
   };
 })();
@@ -149,8 +162,8 @@ let controller = (function(plyCtlr, UICtlr) {
       fullName = event.target.innerHTML.split(" -")[0];
       playerID = event.target.id;
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
-      plyCtlr.addPlayer(fullName, playerStats[0]);
-      // chartData = plyCtlr.getFormatedData("pts");
+      plyCtlr.addPlayer(fullName, playerStats);
+      chartData = plyCtlr.getFormatedData("pts");
       // UICtlr.createChart(chartData);
       UICtlr.clearList();
     }
