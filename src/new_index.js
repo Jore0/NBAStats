@@ -21,7 +21,8 @@ let playerController = (function() {
     return nbaURL;
   };
   let data = {
-    allPlayers: {}
+    allPlayers: {},
+    years: ["2019", "2018", "2017", "2016", "2015", "2014"]
   };
   //www.balldontlie.io/api/v1/stats?seasons[]=2019,2018,2017,2016,2015,2014&player_ids[]=237,236
   return {
@@ -30,13 +31,31 @@ let playerController = (function() {
       console.log(data.allPlayers);
     },
     getFormatedData: dataType => {
-      let labels, playerData, formattedData;
+      let labels, allPlayerData, formattedData;
       labels = Object.keys(data.allPlayers);
-      debugger;
-      playerData = Object.values(data.allPlayers).map(playerStats => {
-        return playerStats[dataType];
+      //arrays
+      allPlayerData = Object.values(data.allPlayers).map(playerSeasons => {
+        debugger;
+        return playerSeasons.map(season => {
+          debugger;
+          return Object.values(season).map(stats => {
+            debugger;
+            return stats[0][dataType];
+          })[0];
+        });
       });
-      formattedData = { labes: labels, datasets: playerData };
+      console.log(allPlayerData);
+      formattedData = {
+        labels: data.years,
+        datasets: [
+          {
+            data: allPlayerData[0],
+            label: labels[0],
+            borderColor: "#3e95cd",
+            fill: false
+          }
+        ]
+      };
       console.log(formattedData);
       return formattedData;
     },
@@ -50,9 +69,7 @@ let playerController = (function() {
     },
     APIGetPlayerAvg: async (id, years) => {
       let url, playerData;
-      years
-        ? years
-        : (years = ["2019", "2018", "2017", "2016", "2015", "2014"]);
+      years ? years : (years = data.years);
 
       playerData = await Promise.all(
         years.map(async year => {
@@ -89,7 +106,13 @@ let UIController = (function() {
       let ctx = document.getElementById(DOMStrings.chart).getContext("2d");
       let chart = new Chart(ctx, {
         type: "line",
-        data: data
+        data: data,
+        options: {
+          title: {
+            display: true,
+            text: "Points"
+          }
+        }
       });
     },
     clearList: () => {
@@ -164,7 +187,7 @@ let controller = (function(plyCtlr, UICtlr) {
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
       plyCtlr.addPlayer(fullName, playerStats);
       chartData = plyCtlr.getFormatedData("pts");
-      // UICtlr.createChart(chartData);
+      UICtlr.createChart(chartData);
       UICtlr.clearList();
     }
   };
