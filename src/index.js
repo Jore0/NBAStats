@@ -13,8 +13,10 @@ let playerController = (function() {
   let titleize = fullName => {
     let titleName = [];
     fullName.split(" ").forEach(name => {
-      let capName = name[0].toUpperCase() + name.slice(1).toLowerCase();
-      titleName.push(capName);
+      if (name !== " ") {
+        let capName = name[0].toUpperCase() + name.slice(1).toLowerCase();
+        titleName.push(capName);
+      }
     });
     return titleName.join("");
   };
@@ -45,7 +47,7 @@ let playerController = (function() {
       datasets = [];
       labels = Object.keys(data.allPlayers);
       //arrays
-      labels.forEach(player => {
+      labels.forEach((player, i) => {
         let playerStats;
         allPlayerData = data.allPlayers[player].map(playerSeasons => {
           debugger;
@@ -53,10 +55,10 @@ let playerController = (function() {
             season => season[dataType]
           )[0];
         });
-        playerStats = new PlayerDataSet(allPlayerData, player, "#3e95cd");
+        playerStats = new PlayerDataSet(allPlayerData, player, data.colors[i]);
         datasets.push(playerStats);
       });
-      console.log("hello");
+      console.log(datasets);
       return { labels: data.years, datasets: datasets };
     },
     APIFindPlayers: async name => {
@@ -95,7 +97,7 @@ let UIController = (function() {
   let DOMStrings = {
     add: ".add",
     items: ".items",
-    inputYear: ".add__year",
+    inputStat: ".add__stat",
     inputPlayer: ".add__player",
     inputBtn: ".add__btn",
     chart: "myChart"
@@ -124,7 +126,7 @@ let UIController = (function() {
     },
     getInput: () => {
       return {
-        year: document.querySelector(DOMStrings.inputYear).value,
+        stat: document.querySelector(DOMStrings.inputStat).value,
         playerName: document.querySelector(DOMStrings.inputPlayer).value
       };
     },
@@ -154,8 +156,8 @@ let UIController = (function() {
 /* ******************************** */
 //GLOBAL APP CONTROLLER
 let controller = (function(plyCtlr, UICtlr) {
+  let DOM = UICtlr.getDOMStrings();
   let setupEventListeners = () => {
-    let DOM = UICtlr.getDOMStrings();
     document
       .querySelector(DOM.inputBtn)
       .addEventListener("click", searchPlayer);
@@ -187,7 +189,9 @@ let controller = (function(plyCtlr, UICtlr) {
       playerID = event.target.id;
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
       plyCtlr.addPlayer(fullName, playerStats);
-      chartData = plyCtlr.getFormatedData("pts");
+      chartData = plyCtlr.getFormatedData(
+        document.querySelector(DOM.inputStat).value
+      );
       UICtlr.createChart(chartData);
       UICtlr.clearList();
     }

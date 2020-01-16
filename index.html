@@ -55,29 +55,62 @@
       
     </header>
     <main>
-      <div class="add">
-        <div class="add__container">
-          <select class="add__year">
-            <option value="2018">2018</option>
-          </select>
-    
-          <input type="text" class="add__player" placeholder="Search for a player (Example: Lebron James, James Harden)" />
+      <div class="results">
+<div class="add">
+  <div class="add__container">
+    <select class="add__stat">
+      <option selected disabled>Select Stat</option>
+      <option value="pts">pts</option>
+      <option value="games_played">games_played</option>
+      <option value="min">min</option>
+      <option value="fgm">fgm</option>
+      <option value="fga">fga</option>
+      <option value="fg3a">fg3a</option>
+      <option value="ftm">ftm</option>
+      <option value="fta">fta</option>
+      <option value="oreb">oreb</option>
+      <option value="dreb">dreb</option>
+      <option value="stl">stl</option>
+      <option value="blk">blk</option>
+      <option value="turnover">turnover</option>
+      <option value="fg_pct">fg_pct</option>
+      <option value="fg3_pct">fg3_pct</option>
+      <option value="ft_pct">ft_pct</option>
+    </select>
 
-          <button class="add__btn">
-          <i class="far fa-check-circle"></i>
-          </button>
-        </div>
-        <div class="items">
-          <!-- <div class="item" id="%id%">
+    <input type="text" class="add__player" placeholder="Search for a player (Example: Lebron James, James Harden)" />
+
+    <button class="add__btn">
+      <i class="far fa-check-circle"></i>
+    </button>
+  </div>
+  <div class="items">
+    <!-- <div class="item" id="%id%">
             <div class="playerName">%Lebron%-%LAL%</div>
           </div> -->
-        </div>
-      </div>  
+  </div>
+</div>
+<div class="player__list">
+  <div class="player__item" id="1">
+    <div class="player__Name">Lebron James</div>
+    <div class="item__delete">
+      <button class="item__delete--btn"><i class="far fa-times-circle"></i></button>
+    </div>
+  </div>
+  <div class="player__item" id="1">
+    <div class="player__Name">Lebron James</div>
+    <div class="item__delete">
+      <button class="item__delete--btn"><i class="far fa-times-circle"></i></button>
+    </div>
+  </div>
+</div>
 
-      <div class="container clearfix">
-      <canvas id="myChart"></canvas>
-
+</div>
       </div>
+      
+      <div class="container clearfix">
+        
+        <canvas id="myChart"></canvas>
       
       </div>
     </main>

@@ -94,8 +94,8 @@ a:hover {
   position: relative;
 }
 
-.add__year {
-  width: 65px;
+.add__stat {
+  width: 110px;
   border: 1px solid #e7e7e7;
   height: 44px;
   font-size: 16px;
@@ -135,7 +135,7 @@ a:hover {
   transform: translateY(2px);
 }
 
-.add__year:focus,
+.add__stat:focus,
 .add__player:focus {
   outline: none;
   border: 1px solid rgba(255, 0, 51, 0.767);
@@ -154,8 +154,8 @@ a:hover {
   z-index: 1;
   text-align: center;
   position: relative;
-  left: 50%;
-  transform: translate(-47%, -5%);
+  left: 36%;
+  /* transform: translate(-47%, -0%); */
   background-color: #f7f7f7;
   font-family: inherit;
   font-size: 14px;
@@ -169,6 +169,62 @@ a:hover {
 .item:hover {
   background-color: #e3e3e3;
   cursor: pointer;
+}
+/**** PLAYER BTN ****/
+.player__list {
+  padding: 15px 15px;
+}
+.player__btn {
+  display: inline-block;
+}
+
+.player__item {
+  text-align: center;
+  margin-left: 25px;
+  padding: 12px 10px;
+  display: inline-block;
+  border-radius: 5px;
+  background: none;
+  border: 1px solid #14649d;
+  color: #14649d;
+  height: 48px;
+  font-size: 16px;
+}
+.player__Name {
+  margin: 0 auto;
+  vertical-align: center;
+  display: inline-block;
+  margin-left: 10px;
+  transition: transform 0.3s;
+}
+.item__delete {
+  display: inline-block;
+}
+.item__delete--btn {
+  font-size: 16px;
+  background: none;
+  color: #14649d;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: center;
+  line-height: 1;
+  display: none;
+}
+.item__delete--btn:focus {
+  outline: none;
+}
+.item__delete--btn:active {
+  transform: translateY(2px);
+}
+.player__item:hover .item__delete--btn {
+  display: inline-block;
+}
+.player__item:hover .item__value {
+  transform: translateX(-10px);
+}
+.player__item:hover .player__Name {
+  transform: translateX(-10px);
 }
 
 /***** CHART *****/
