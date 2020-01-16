@@ -69,15 +69,20 @@ let playerController = (function() {
     },
     getFormatedData: dataType => {
       let labels, datasets;
+
       datasets = [];
       labels = Object.keys(data.allPlayers);
       //arrays
       labels.forEach((player, i) => {
         let playerStats, id;
         allPlayerData = data.allPlayers[player].map(playerSeasons => {
-          return Object.values(playerSeasons)[0].map(
-            season => season[dataType]
-          )[0];
+          return Object.values(playerSeasons)[0].map(season => {
+            if (dataType === "min") {
+              return parseFloat(season[dataType]);
+            } else {
+              return season[dataType];
+            }
+          })[0];
         });
         id = data.allPlayers[player][0][2014][0].player_id;
         l = findColor(id);
@@ -208,6 +213,9 @@ let controller = (function(plyCtlr, UICtlr) {
       }
     });
     document.querySelector(DOM.add).addEventListener("click", ctrlSelectPlayer);
+    document
+      .querySelector(DOM.inputStat)
+      .addEventListener("change", createChart);
   };
 
   let searchPlayer = async () => {
@@ -222,7 +230,14 @@ let controller = (function(plyCtlr, UICtlr) {
       UICtlr.addListItem(possiblePlayers);
     }
   };
-
+  let createChart = () => {
+    let chartData;
+    chartData = plyCtlr.getFormatedData(
+      document.querySelector(DOM.inputStat).value
+    );
+    UICtlr.createChart(chartData);
+    UICtlr.clearList();
+  };
   let ctrlSelectPlayer = async (event, playerName, initID) => {
     let playerID, playerStats, fullName, chartData, color;
     if (playerName || event.target.id) {
@@ -231,13 +246,10 @@ let controller = (function(plyCtlr, UICtlr) {
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
       plyCtlr.addPlayer(fullName, playerStats, playerID);
       color = plyCtlr.getColors(parseInt(playerID));
-      chartData = plyCtlr.getFormatedData(
-        document.querySelector(DOM.inputStat).value
-      );
       UICtlr.addPlayerBtn(fullName, playerID, color);
-      UICtlr.createChart(chartData);
-      UICtlr.clearList();
+      createChart();
       console.log("succsess");
+    } else {
     }
   };
   return {
