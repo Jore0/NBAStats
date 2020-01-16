@@ -35,7 +35,6 @@ let playerController = (function() {
   let data = {
     allPlayers: {},
     years: ["2014", "2015", "2016", "2017", "2018", "2019"],
-    // colors: ["#3e95cd", "#E7BB41", "#BB0A21", "#540D6E", ]
     colors: {
       "#3e95cd": null,
       "#E7BB41": null,
@@ -54,6 +53,14 @@ let playerController = (function() {
     return playerColor;
   };
   return {
+    deleteItem: (id, name) => {
+      let color;
+      //1.Remove players
+      delete data.allPlayers[name];
+      //2.Set player color to null
+      color = findColor(id);
+      data.colors[color] = null;
+    },
     addPlayer: (name, stats, id) => {
       let availableColors;
       data.allPlayers[name] = stats;
@@ -135,6 +142,11 @@ let UIController = (function() {
   };
 
   return {
+    deletePlayerBtn: id => {
+      let element;
+      element = document.getElementById(id);
+      element.parentNode.removeChild(element);
+    },
     createChart: data => {
       Chart.defaults.global.defaultFontSize = 18;
       let ctx = document.getElementById(DOMStrings.chart).getContext("2d");
@@ -144,7 +156,7 @@ let UIController = (function() {
         options: {
           title: {
             display: true,
-            text: "Points"
+            text: document.querySelector(DOMStrings.inputStat).value
           }
         }
       });
@@ -216,6 +228,9 @@ let controller = (function(plyCtlr, UICtlr) {
     document
       .querySelector(DOM.inputStat)
       .addEventListener("change", createChart);
+    document
+      .querySelector(DOM.playerList)
+      .addEventListener("click", ctrlDeleteItem);
   };
 
   let searchPlayer = async () => {
@@ -250,6 +265,22 @@ let controller = (function(plyCtlr, UICtlr) {
       createChart();
       console.log("succsess");
     } else {
+    }
+  };
+  let ctrlDeleteItem = function(event) {
+    let ID, name, type;
+    ID = event.target.parentNode.parentNode.parentNode.id;
+    name = event.target.parentNode.parentNode.previousSibling.innerHTML;
+
+    if (ID) {
+      ID = parseInt(ID);
+      //1. DELETE THE ITEM FROM THE DATA
+
+      plyCtlr.deleteItem(ID, name);
+      //2.DELETE FROM UI
+      UICtlr.deletePlayerBtn(ID);
+      //3. UPDATE CHART
+      createChart();
     }
   };
   return {
