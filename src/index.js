@@ -53,6 +53,9 @@ let playerController = (function() {
     return playerColor;
   };
   return {
+    playerLimit: () => {
+      return Object.keys(data.allPlayers).length === 5;
+    },
     deleteItem: (id, name) => {
       let color;
       //1.Remove players
@@ -216,21 +219,27 @@ let UIController = (function() {
 let controller = (function(plyCtlr, UICtlr) {
   let DOM = UICtlr.getDOMStrings();
   let setupEventListeners = () => {
-    document
-      .querySelector(DOM.inputBtn)
-      .addEventListener("click", searchPlayer);
-    document.addEventListener("keypress", event => {
-      if (event.keyCode === 13 || event.which === 13) {
-        searchPlayer();
-      }
-    });
-    document.querySelector(DOM.add).addEventListener("click", ctrlSelectPlayer);
-    document
-      .querySelector(DOM.inputStat)
-      .addEventListener("change", createChart);
-    document
-      .querySelector(DOM.playerList)
-      .addEventListener("click", ctrlDeleteItem);
+    if (!plyCtlr.playerLimit()) {
+      document
+        .querySelector(DOM.inputBtn)
+        .addEventListener("click", searchPlayer);
+      document.addEventListener("keypress", event => {
+        if (event.keyCode === 13 || event.which === 13) {
+          searchPlayer();
+        }
+      });
+      document
+        .querySelector(DOM.add)
+        .addEventListener("click", ctrlSelectPlayer);
+      document
+        .querySelector(DOM.inputStat)
+        .addEventListener("change", createChart);
+      document
+        .querySelector(DOM.playerList)
+        .addEventListener("click", ctrlDeleteItem);
+    } else {
+      alert("Only 5 Players at a time!");
+    }
   };
 
   let searchPlayer = async () => {
