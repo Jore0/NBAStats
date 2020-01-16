@@ -44,6 +44,15 @@ let playerController = (function() {
       "#046D0E": null
     }
   };
+  let findColor = id => {
+    let playerColor;
+    for (let color in data.colors) {
+      if (data.colors[color] === id) {
+        playerColor = color;
+      }
+    }
+    return playerColor;
+  };
   return {
     addPlayer: (name, stats, id) => {
       let availableColors;
@@ -51,21 +60,12 @@ let playerController = (function() {
       availableColors = Object.keys(data.colors).filter(
         color => data.colors[color] === null
       );
-      data.colors[availableColors[0]] = id;
+      data.colors[availableColors[0]] = parseInt(id);
       console.log(data.colors);
       console.log(data.allPlayers);
     },
     getColors: id => {
-      let playerColor;
-      for (let color in data.colors) {
-        debugger;
-        if (data.colors[color] === id) {
-          debugger;
-          playerColor = color;
-        }
-      }
-      console.log("playerColor", playerColor);
-      return playerColor;
+      return findColor(id);
     },
     getFormatedData: dataType => {
       let labels, datasets;
@@ -73,17 +73,17 @@ let playerController = (function() {
       labels = Object.keys(data.allPlayers);
       //arrays
       labels.forEach((player, i) => {
-        let playerStats;
+        let playerStats, id;
         allPlayerData = data.allPlayers[player].map(playerSeasons => {
-          debugger;
           return Object.values(playerSeasons)[0].map(
             season => season[dataType]
           )[0];
         });
-        playerStats = new PlayerDataSet(allPlayerData, player, data.colors[i]);
+        id = data.allPlayers[player][0][2014][0].player_id;
+        l = findColor(id);
+        playerStats = new PlayerDataSet(allPlayerData, player, l);
         datasets.push(playerStats);
       });
-      console.log(datasets);
       return { labels: data.years, datasets: datasets };
     },
     APIFindPlayers: async name => {
@@ -223,26 +223,29 @@ let controller = (function(plyCtlr, UICtlr) {
     }
   };
 
-  let ctrlSelectPlayer = async event => {
+  let ctrlSelectPlayer = async (event, playerName, initID) => {
     let playerID, playerStats, fullName, chartData, color;
-    if (event.target.id) {
-      fullName = event.target.innerHTML.split(" -")[0];
-      playerID = event.target.id;
+    if (playerName || event.target.id) {
+      fullName = playerName || event.target.innerHTML.split(" -")[0];
+      playerID = initID || event.target.id;
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
       plyCtlr.addPlayer(fullName, playerStats, playerID);
-      color = plyCtlr.getColors(playerID);
+      color = plyCtlr.getColors(parseInt(playerID));
       chartData = plyCtlr.getFormatedData(
         document.querySelector(DOM.inputStat).value
       );
       UICtlr.addPlayerBtn(fullName, playerID, color);
       UICtlr.createChart(chartData);
       UICtlr.clearList();
+      console.log("succsess");
     }
   };
   return {
     init: () => {
       console.log("Application is running");
-
+      ctrlSelectPlayer(null, "Lebron James", 237);
+      ctrlSelectPlayer(null, "Stephen Curry", 115);
+      ctrlSelectPlayer(null, "Giannis Antetokounmpo", 15);
       setupEventListeners();
     }
   };
