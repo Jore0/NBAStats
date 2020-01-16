@@ -185,8 +185,8 @@ a:hover {
   display: inline-block;
   border-radius: 5px;
   background: none;
-  border: 1px solid #14649d;
-  color: #14649d;
+  border: 1px solid;
+  /* color: red; */
   height: 48px;
   font-size: 16px;
 }
@@ -203,7 +203,7 @@ a:hover {
 .item__delete--btn {
   font-size: 16px;
   background: none;
-  color: #14649d;
+  color: inherit;
   border: none;
   cursor: pointer;
   display: inline-block;

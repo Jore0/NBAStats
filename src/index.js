@@ -35,12 +35,37 @@ let playerController = (function() {
   let data = {
     allPlayers: {},
     years: ["2014", "2015", "2016", "2017", "2018", "2019"],
-    colors: ["#3e95cd", "#E7BB41", "#BB0A21", "#540D6E", "046D0E"]
+    // colors: ["#3e95cd", "#E7BB41", "#BB0A21", "#540D6E", ]
+    colors: {
+      "#3e95cd": null,
+      "#E7BB41": null,
+      "#BB0A21": null,
+      "#540D6E": null,
+      "#046D0E": null
+    }
   };
   return {
-    addPlayer: (id, stats) => {
-      data.allPlayers[id] = stats;
+    addPlayer: (name, stats, id) => {
+      let availableColors;
+      data.allPlayers[name] = stats;
+      availableColors = Object.keys(data.colors).filter(
+        color => data.colors[color] === null
+      );
+      data.colors[availableColors[0]] = id;
+      console.log(data.colors);
       console.log(data.allPlayers);
+    },
+    getColors: id => {
+      let playerColor;
+      for (let color in data.colors) {
+        debugger;
+        if (data.colors[color] === id) {
+          debugger;
+          playerColor = color;
+        }
+      }
+      console.log("playerColor", playerColor);
+      return playerColor;
     },
     getFormatedData: dataType => {
       let labels, datasets;
@@ -100,7 +125,8 @@ let UIController = (function() {
     inputStat: ".add__stat",
     inputPlayer: ".add__player",
     inputBtn: ".add__btn",
-    chart: "myChart"
+    chart: "myChart",
+    playerList: ".player__list"
   };
 
   return {
@@ -129,6 +155,21 @@ let UIController = (function() {
         stat: document.querySelector(DOMStrings.inputStat).value,
         playerName: document.querySelector(DOMStrings.inputPlayer).value
       };
+    },
+    addPlayerBtn: (fullName, id, color) => {
+      let playerListDOM, html, newHTML, playerDOM;
+      html =
+        '<div class="player__item" id="%id%" style="color:%color%"><div class="player__Name">%fullName%</div><div class="item__delete"><button class="item__delete--btn"><i class="far fa-times-circle"></i></button></div></div>';
+      newHTML = html.replace("%fullName%", fullName);
+      newHTML = newHTML.replace("%id%", id);
+      newHTML = newHTML.replace("%color%", color);
+      playerListDOM = document.querySelector(DOMStrings.playerList);
+      playerListDOM.insertAdjacentHTML("beforeend", newHTML);
+      // playerDOM = document.getElementById(id);
+      // console.log(typeof color);
+      // playerDOM.style.color = color;
+      // console.log(playerDOM.style.color);
+      // playerDOM.style.borderColor = color;
     },
     addListItem: data => {
       let itemsDOM;
@@ -183,15 +224,17 @@ let controller = (function(plyCtlr, UICtlr) {
   };
 
   let ctrlSelectPlayer = async event => {
-    let playerID, playerStats, fullName, chartData;
+    let playerID, playerStats, fullName, chartData, color;
     if (event.target.id) {
       fullName = event.target.innerHTML.split(" -")[0];
       playerID = event.target.id;
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
-      plyCtlr.addPlayer(fullName, playerStats);
+      plyCtlr.addPlayer(fullName, playerStats, playerID);
+      color = plyCtlr.getColors(playerID);
       chartData = plyCtlr.getFormatedData(
         document.querySelector(DOM.inputStat).value
       );
+      UICtlr.addPlayerBtn(fullName, playerID, color);
       UICtlr.createChart(chartData);
       UICtlr.clearList();
     }
