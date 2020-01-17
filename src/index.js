@@ -74,11 +74,12 @@ let playerController = (function() {
         color => data.colors[color] === null
       );
       data.colors[availableColors[0]] = parseInt(id);
-      console.log(data.colors);
-      console.log(data.allPlayers);
     },
     getColors: id => {
       return findColor(id);
+    },
+    getAllData: () => {
+      return data.allPlayers;
     },
     getFormatedData: dataType => {
       let labels, datasets;
@@ -144,10 +145,41 @@ let UIController = (function() {
     inputPlayer: ".add__player",
     inputBtn: ".add__btn",
     chart: "myChart",
-    playerList: ".player__list"
+    playerList: ".player__list",
+    statsContainer: ".all__stats_container",
+    allStatItem: ".all_stats_item",
+    inputYear: ".add__year",
+    statsList: ".stats__list"
   };
 
   return {
+    createStatList: (color, stats) => {
+      let container = document.querySelector(DOMStrings.statsContainer);
+      // debugger;
+      console.log(stats);
+      Object.keys(stats).forEach(name => {
+        let html, newHTML, statsList, pairs;
+        html =
+          '<div class="all_stats_item" id=stat-%id% style="color:%color%"><div class="heading"><h2>%name%</h2></div><div id="stats__list-%id%"></div></div >';
+        newHTML = html.replace("%id%", stats[name].player_id);
+        newHTML = newHTML.replace("%name%", name);
+        newHTML = newHTML.replace("%color%", color);
+        newHTML = newHTML.replace("%id%", stats[name].player_id);
+        container.insertAdjacentHTML("beforeend", newHTML);
+        statsList = document.getElementById(
+          "stats__list-" + stats[name].player_id
+        );
+        pairs = Object.entries(stats[name]);
+        pairs.forEach(data => {
+          let html, newHTML;
+          html =
+            '<div class="stat__container"><h6 class="stat__type">%key%</h6><h6 class="stat">%value%</h6></div>';
+          newHTML = html.replace("%key%", data[0]);
+          newHTML = newHTML.replace("%value%", data[1]);
+          statsList.insertAdjacentHTML("beforeend", newHTML);
+        });
+      });
+    },
     deletePlayerBtn: id => {
       let element;
       element = document.getElementById(id);
@@ -262,20 +294,36 @@ let controller = (function(plyCtlr, UICtlr) {
     UICtlr.createChart(chartData);
     UICtlr.clearList();
   };
+  let createList = (color, team) => {
+    let year, stats, formatedStats;
+    formatedStats = {};
+    year = document.querySelector(DOM.inputYear).value;
+    stats = plyCtlr.getAllData();
+    names = Object.keys(stats);
+    for (let name in stats) {
+      let list = stats[name].filter(
+        yearStats => typeof yearStats[year] !== "undefined"
+      );
+      formatedStats[name] = list[0][year][0];
+    }
+
+    UICtlr.createStatList(color, formatedStats, team);
+  };
   let ctrlSelectPlayer = async (event, playerName, initID) => {
-    let playerID, playerStats, fullName, chartData, color;
+    let playerID, playerStats, fullName, team, color;
     if (playerName || event.target.id) {
       fullName = playerName || event.target.innerHTML.split(" -")[0];
+      // team = event.target.innerHTML.split(" -")[1];
       playerID = initID || event.target.id;
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
       plyCtlr.addPlayer(fullName, playerStats, playerID);
       color = plyCtlr.getColors(parseInt(playerID));
       UICtlr.addPlayerBtn(fullName, playerID, color);
       createChart();
+      createList(color);
       document.querySelector(DOM.inputPlayer).value = "";
 
       console.log("succsess");
-    } else {
     }
   };
   let ctrlDeleteItem = function(event) {

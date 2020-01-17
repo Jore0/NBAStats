@@ -94,7 +94,8 @@ a:hover {
   position: relative;
 }
 
-.add__stat {
+.add__stat,
+.add__year {
   width: 110px;
   border: 1px solid #e7e7e7;
   height: 44px;
@@ -235,4 +236,26 @@ canvas {
   margin: 0 auto;
   width: 800px !important;
   height: 400px !important;
+}
+
+/***** Stat List *****/
+.add__year {
+  display: block;
+  margin: 0 auto;
+}
+.stats__list {
+  border: 1px solid #e7e7e7;
+  padding: 5px;
+  margin: 15px 50px;
+}
+.heading {
+  margin: 0px 50px;
+}
+.stat__container {
+  display: inline-block;
+
+  margin: 3px 10px;
+}
+h6 {
+  font-size: 14px;
 }
