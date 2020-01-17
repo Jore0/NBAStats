@@ -310,17 +310,16 @@ let controller = (function(plyCtlr, UICtlr) {
     UICtlr.createStatList(color, formatedStats, team);
   };
   let ctrlSelectPlayer = async (event, playerName, initID) => {
-    let playerID, playerStats, fullName, team, color;
+    let playerID, playerStats, fullName, color;
     if (playerName || event.target.id) {
       fullName = playerName || event.target.innerHTML.split(" -")[0];
-      // team = event.target.innerHTML.split(" -")[1];
       playerID = initID || event.target.id;
       playerStats = await plyCtlr.APIGetPlayerAvg(playerID); ///
       plyCtlr.addPlayer(fullName, playerStats, playerID);
       color = plyCtlr.getColors(parseInt(playerID));
       UICtlr.addPlayerBtn(fullName, playerID, color);
       createChart();
-      createList(color);
+      // createList(color);
       document.querySelector(DOM.inputPlayer).value = "";
 
       console.log("succsess");
