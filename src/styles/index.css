@@ -217,6 +217,9 @@ a:hover {
 .item__delete--btn:active {
   transform: translateY(2px);
 }
+.player__item:hover {
+  background-color: #f7f7f7;
+}
 .player__item:hover .item__delete--btn {
   display: inline-block;
 }

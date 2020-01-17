@@ -13,12 +13,13 @@ let playerController = (function() {
   let titleize = fullName => {
     let titleName = [];
     fullName.split(" ").forEach(name => {
+      debugger;
       if (name !== " ") {
         let capName = name[0].toUpperCase() + name.slice(1).toLowerCase();
         titleName.push(capName);
       }
     });
-    return titleName.join("");
+    return titleName.join("_");
   };
 
   let findPlayerUrlHelper = name => {
@@ -54,7 +55,9 @@ let playerController = (function() {
   };
   return {
     playerLimit: () => {
-      return Object.keys(data.allPlayers).length === 5;
+      let limit = Object.keys(data.allPlayers).length === 5;
+      debugger;
+      return limit;
     },
     deleteItem: (id, name) => {
       let color;
@@ -219,27 +222,22 @@ let UIController = (function() {
 let controller = (function(plyCtlr, UICtlr) {
   let DOM = UICtlr.getDOMStrings();
   let setupEventListeners = () => {
-    if (!plyCtlr.playerLimit()) {
-      document
-        .querySelector(DOM.inputBtn)
-        .addEventListener("click", searchPlayer);
-      document.addEventListener("keypress", event => {
-        if (event.keyCode === 13 || event.which === 13) {
-          searchPlayer();
-        }
-      });
-      document
-        .querySelector(DOM.add)
-        .addEventListener("click", ctrlSelectPlayer);
-      document
-        .querySelector(DOM.inputStat)
-        .addEventListener("change", createChart);
-      document
-        .querySelector(DOM.playerList)
-        .addEventListener("click", ctrlDeleteItem);
-    } else {
-      alert("Only 5 Players at a time!");
-    }
+    document
+      .querySelector(DOM.inputBtn)
+      .addEventListener("click", searchPlayer);
+    document.addEventListener("keypress", event => {
+      if (event.keyCode === 13 || event.which === 13) {
+        searchPlayer();
+      }
+    });
+
+    document.querySelector(DOM.add).addEventListener("click", ctrlSelectPlayer);
+    document
+      .querySelector(DOM.inputStat)
+      .addEventListener("change", createChart);
+    document
+      .querySelector(DOM.playerList)
+      .addEventListener("click", ctrlDeleteItem);
   };
 
   let searchPlayer = async () => {
@@ -247,11 +245,13 @@ let controller = (function(plyCtlr, UICtlr) {
     UICtlr.clearList();
     //1. Get input field info
     input = UICtlr.getInput();
-    if (input.playerName !== "") {
+    if (input.playerName !== "" && !plyCtlr.playerLimit()) {
       //2. Fetch data from API
       possiblePlayers = await plyCtlr.APIFindPlayers(input.playerName);
       //3. Display players
       UICtlr.addListItem(possiblePlayers);
+    } else {
+      alert("5 players Max");
     }
   };
   let createChart = () => {
@@ -272,6 +272,8 @@ let controller = (function(plyCtlr, UICtlr) {
       color = plyCtlr.getColors(parseInt(playerID));
       UICtlr.addPlayerBtn(fullName, playerID, color);
       createChart();
+      document.querySelector(DOM.inputPlayer).value = "";
+
       console.log("succsess");
     } else {
     }
