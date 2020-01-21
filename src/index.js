@@ -157,8 +157,6 @@ let UIController = (function() {
   return {
     createStatList: (color, stats) => {
       let container = document.querySelector(DOMStrings.statsContainer);
-      // debugger;
-      console.log(stats);
       Object.keys(stats).forEach(name => {
         let html, newHTML, statsList, pairs;
         html =
@@ -233,11 +231,6 @@ let UIController = (function() {
       newHTML = newHTML.replace("%color%", color);
       playerListDOM = document.querySelector(DOMStrings.playerList);
       playerListDOM.insertAdjacentHTML("beforeend", newHTML);
-      // playerDOM = document.getElementById(id);
-      // console.log(typeof color);
-      // playerDOM.style.color = color;
-      // console.log(playerDOM.style.color);
-      // playerDOM.style.borderColor = color;
     },
     addListItem: data => {
       let itemsDOM;
@@ -277,13 +270,13 @@ let controller = (function(plyCtlr, UICtlr) {
     });
 
     document.querySelector(DOM.add).addEventListener("click", ctrlSelectPlayer);
-    ///add if statement for click
-    // document.querySelector(DOM.add).addEventListener("click", event => {
-    //   // if (!==){
-    //   //   ctrlSelectPlayer()
-    //   // } else {
-    //   // }
-    // });
+    document.addEventListener("click", event => {
+      let items = document.querySelector(DOM.items);
+      console.log(event);
+      if (event.parentNode !== items) {
+        UICtlr.clearList();
+      }
+    });
     ///add if statement for click away
     document
       .querySelector(DOM.inputStat)
@@ -340,10 +333,7 @@ let controller = (function(plyCtlr, UICtlr) {
       color = plyCtlr.getColors(parseInt(playerID));
       UICtlr.addPlayerBtn(fullName, playerID, color);
       createChart();
-      // createList(color);
       document.querySelector(DOM.inputPlayer).value = "";
-
-      console.log("succsess");
     }
   };
   let ctrlDeleteItem = function(event) {
