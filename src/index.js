@@ -14,7 +14,8 @@ let playerController = (function() {
     let titleName = [];
     fullName.split(" ").forEach(name => {
       debugger;
-      if (name !== " ") {
+      if (name !== "") {
+        debugger;
         let capName = name[0].toUpperCase() + name.slice(1).toLowerCase();
         titleName.push(capName);
       }
@@ -138,6 +139,7 @@ let playerController = (function() {
 /* ******************************** */
 //UI CONTROLLER
 let UIController = (function() {
+  let chart;
   let DOMStrings = {
     add: ".add",
     items: ".items",
@@ -188,10 +190,21 @@ let UIController = (function() {
     createChart: data => {
       Chart.defaults.global.defaultFontSize = 18;
       let ctx = document.getElementById(DOMStrings.chart).getContext("2d");
-      let chart = new Chart(ctx, {
+      if (chart) {
+        chart.destroy();
+      }
+
+      chart = new Chart(ctx, {
         type: "line",
         data: data,
         options: {
+          responsive: true,
+          // maintainAspectRatio: false,
+          legend: {
+            onClick: function(e) {
+              e.stopPropagation();
+            }
+          },
           title: {
             display: true,
             text: document.querySelector(DOMStrings.inputStat).value
