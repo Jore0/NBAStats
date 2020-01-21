@@ -19,6 +19,7 @@ body {
   font-weight: 400;
   position: relative;
   color: #555;
+  padding-bottom: 15px;
 }
 /**********************************************
 *** TOP PART
@@ -258,4 +259,8 @@ canvas {
 }
 h6 {
   font-size: 14px;
+}
+
+footer {
+  padding: 10px;
 }

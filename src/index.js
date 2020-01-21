@@ -264,6 +264,14 @@ let controller = (function(plyCtlr, UICtlr) {
     });
 
     document.querySelector(DOM.add).addEventListener("click", ctrlSelectPlayer);
+    ///add if statement for click
+    // document.querySelector(DOM.add).addEventListener("click", event => {
+    //   // if (!==){
+    //   //   ctrlSelectPlayer()
+    //   // } else {
+    //   // }
+    // });
+    ///add if statement for click away
     document
       .querySelector(DOM.inputStat)
       .addEventListener("change", createChart);
